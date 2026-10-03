@@ -58,9 +58,9 @@ def main():
     md = [f"# Script de la voix off — film Optikom", "",
           f"Durée du film : **{court(fin_film)}** ({fin_film} s). Débit visé : ~{CPS:.0f} caractères/s, voix posée, souriante, sans emphase publicitaire.",
           "Chaque phrase commence au timecode indiqué (début du sous-titre). Le sous-titre reste affiché jusqu'à la fin indiquée : finir la phrase avant.",
-          "", "| # | Acte | Début | Fin | Voix off (à dire) | Sous-titre affiché |", "|---|---|---|---|---|---|"]
+          "", "| # | Acte | Début | Fin | Voix off (à dire) | Sous-titre affiché | À l'image |", "|---|---|---|---|---|---|---|"]
     for i, l in enumerate(sortie, 1):
-        md.append(f"| {i} | {l['acte']} | {court(l['debut'])} | {court(l['fin'])} | {l.get('voix', l['texte'])} | {l['texte']} |")
+        md.append(f"| {i} | {l['acte']} | {court(l['debut'])} | {court(l['fin'])} | {l.get('voix', l['texte'])} | {l['texte']} | {l.get('image', '')} |")
     md += ["", f"Fin du film (carton final tenu) : {court(fin_film)}", ""]
     (RACINE / "script/script-voix-off.md").write_text("\n".join(md))
     print(f"{len(sortie)} lignes, film {fin_film} s")

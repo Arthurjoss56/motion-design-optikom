@@ -205,7 +205,7 @@ body { font-family: "Bricolage", system-ui, sans-serif; color: var(--ink); -webk
 .onde { position: absolute; border-radius: 50%; border: 3px solid var(--accent); }
 
 /* ACTE 5 — carte */
-.carte-panneau { position: absolute; border-radius: 64px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, #000 0, #000 82%, transparent 100%); mask-image: linear-gradient(180deg, #000 0, #000 82%, transparent 100%); }
+.carte-panneau { position: absolute; border-radius: 64px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, #000 0, #000 90%, transparent 100%); mask-image: linear-gradient(180deg, #000 0, #000 90%, transparent 100%); }
 .carte-panneau .trame-large { position: absolute; inset: 0; background-image: radial-gradient(rgb(255 255 255 / .13) 1.4px, transparent 2px); background-size: 30px 30px;
   -webkit-mask-image: radial-gradient(ellipse 70% 60% at 85% 10%, #000, transparent); mask-image: radial-gradient(ellipse 70% 60% at 85% 10%, #000, transparent); }
 .carte-panneau svg.contour { position: absolute; overflow: visible; }

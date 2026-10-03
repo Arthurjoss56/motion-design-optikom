@@ -4,6 +4,7 @@
     {
       "acte": "1 Problème",
       "texte": "Vos clients vous cherchent sur Google.",
+      "image": "Recherche Google « plombier Vannes » tapée lettre à lettre.",
       "debut": 0.6,
       "fin": 3.66,
       "duree_voix": 2.71
@@ -11,6 +12,7 @@
     {
       "acte": "1 Problème",
       "texte": "Mais ce sont vos concurrents qu'ils trouvent.",
+      "image": "Trois concurrents en tête ; « Votre entreprise ? Introuvable. » en rouge.",
       "debut": 3.96,
       "fin": 7.53,
       "duree_voix": 3.21
@@ -18,6 +20,7 @@
     {
       "acte": "1 Problème",
       "texte": "Votre site ? Daté. Lent sur téléphone.",
+      "image": "L'emplacement rouge devient l'ancien site ; téléphone bloqué sur 8,4 s.",
       "debut": 7.83,
       "fin": 10.89,
       "duree_voix": 2.71
@@ -25,6 +28,7 @@
     {
       "acte": "1 Problème",
       "texte": "Et pas une seule demande de devis.",
+      "image": "Widget « 0 demande » qui tremble.",
       "debut": 11.19,
       "fin": 13.97,
       "duree_voix": 2.43
@@ -32,6 +36,7 @@
     {
       "acte": "2 Audit",
       "texte": "Tout commence par un audit gratuit.",
+      "image": "Loupe de mise au point Optikom : tout est flou sauf sous la loupe.",
       "debut": 15.17,
       "fin": 18.02,
       "duree_voix": 2.5
@@ -39,6 +44,7 @@
     {
       "acte": "2 Audit",
       "texte": "Il montre ce qui vous fait perdre des clients.",
+      "image": "4 pastilles numérotées se posent, puis volent dans le rapport d'audit.",
       "debut": 18.32,
       "fin": 21.96,
       "duree_voix": 3.29
@@ -46,6 +52,7 @@
     {
       "acte": "3 Maquette",
       "texte": "Chaque problème trouve sa solution sur la maquette.",
+      "image": "Chaque ligne rouge du rapport devient une solution bleue et vole dans la maquette.",
       "debut": 23.16,
       "fin": 27.15,
       "duree_voix": 3.64
@@ -53,6 +60,7 @@
     {
       "acte": "3 Maquette",
       "texte": "Vous validez tout, avant la moindre ligne de code.",
+      "image": "Clic sur « Valider la maquette » : coche, repères bleus.",
       "debut": 27.45,
       "fin": 31.37,
       "duree_voix": 3.57
@@ -60,6 +68,7 @@
     {
       "acte": "4 Construction",
       "texte": "Votre site se construit à partir de cette maquette.",
+      "image": "La maquette filaire est remplacée bloc par bloc par le vrai site.",
       "debut": 32.57,
       "fin": 36.56,
       "duree_voix": 3.64
@@ -67,6 +76,7 @@
     {
       "acte": "4 Construction",
       "texte": "Rapide, clair, pensé pour le téléphone.",
+      "image": "Version téléphone au premier plan, jauges de performance.",
       "debut": 36.86,
       "fin": 40.0,
       "duree_voix": 2.79
@@ -74,6 +84,7 @@
     {
       "acte": "5 Mise en ligne",
       "texte": "Il est en ligne. Google le découvre.",
+      "image": "Clic « Mettre en ligne » : l'adresse devient votre-entreprise.fr, ondes.",
       "debut": 41.2,
       "fin": 44.12,
       "duree_voix": 2.57
@@ -81,6 +92,7 @@
     {
       "acte": "5 Mise en ligne",
       "texte": "Votre fiche Google est prête, à Vannes et dans le Golfe.",
+      "image": "Le site se replie en repère sur Vannes ; carte du Golfe, fiche Google.",
       "debut": 44.42,
       "fin": 48.77,
       "duree_voix": 4.0
@@ -88,6 +100,7 @@
     {
       "acte": "5 Mise en ligne",
       "texte": "Vos clients vous trouvent sur Google.",
+      "image": "Le résultat Google revient, « Votre entreprise » monte en tête.",
       "debut": 49.07,
       "fin": 52.06,
       "duree_voix": 2.64
@@ -95,6 +108,7 @@
     {
       "acte": "6 Visiteurs",
       "texte": "Les visiteurs arrivent sur votre site.",
+      "image": "Le résultat devient un téléphone ; points lumineux qui arrivent ; courbe de visites.",
       "debut": 53.26,
       "fin": 56.33,
       "duree_voix": 2.71
@@ -102,6 +116,7 @@
     {
       "acte": "6 Visiteurs",
       "texte": "Ils voient votre travail, vos horaires, votre numéro.",
+      "image": "Défilement : réalisations, horaires, bouton Appeler.",
       "debut": 56.63,
       "fin": 60.76,
       "duree_voix": 3.79
@@ -109,6 +124,7 @@
     {
       "acte": "7 Demandes",
       "texte": "Et ils vous écrivent.",
+      "image": "Le visiteur appuie sur « Demander un devis ».",
       "debut": 61.96,
       "fin": 63.81,
       "duree_voix": 1.5
@@ -116,6 +132,7 @@
     {
       "acte": "7 Demandes",
       "texte": "Les demandes de devis arrivent dans votre boîte mail.",
+      "image": "Enveloppes qui volent vers la boîte de réception, notifications.",
       "debut": 64.11,
       "fin": 68.25,
       "duree_voix": 3.79
@@ -124,6 +141,7 @@
       "acte": "8 Résultat",
       "texte": "Votre site en ligne à partir de 30 jours.",
       "voix": "Votre site en ligne à partir de trente jours.",
+      "image": "Les messages deviennent trois cartes bleues ; « 30 jours ».",
       "debut": 69.45,
       "fin": 73.01,
       "duree_voix": 3.21
@@ -132,6 +150,7 @@
       "acte": "8 Résultat",
       "texte": "Construit comme le nôtre : 100/100 en vitesse.",
       "voix": "Construit comme le nôtre : cent sur cent en vitesse.",
+      "image": "« 100/100 » ; score de vitesse d'optikom.fr.",
       "debut": 73.31,
       "fin": 77.38,
       "duree_voix": 3.71
@@ -139,6 +158,7 @@
     {
       "acte": "8 Résultat",
       "texte": "Un seul interlocuteur, du devis au suivi.",
+      "image": "« 1 seul interlocuteur ».",
       "debut": 77.68,
       "fin": 80.96,
       "duree_voix": 2.93
@@ -147,6 +167,7 @@
       "acte": "9 Garantie",
       "texte": "Notre garantie : [À COMPLÉTER]",
       "voix": "Notre garantie : [phrase à compléter, ~3 s]",
+      "image": "Les cartes s'empilent en carte « Notre garantie ».",
       "debut": 82.16,
       "fin": 85.58,
       "duree_voix": 3.07
@@ -155,6 +176,7 @@
       "acte": "10 Prix",
       "texte": "Votre site : à partir de 1 100 €.",
       "voix": "Votre site : à partir de mille cent euros.",
+      "image": "La garantie se scinde en deux cartes de prix : 1 100 €.",
       "debut": 86.78,
       "fin": 90.13,
       "duree_voix": 3.0
@@ -163,6 +185,7 @@
       "acte": "10 Prix",
       "texte": "Référencement local : à partir de 250 €/mois.",
       "voix": "Votre référencement local : à partir de deux cent cinquante euros par mois.",
+      "image": "Mise en avant : 250 €/mois.",
       "debut": 90.43,
       "fin": 96.14,
       "duree_voix": 5.36
@@ -171,6 +194,7 @@
       "acte": "11 Appel à l'action",
       "texte": "Audit gratuit sous 48 h.",
       "voix": "Demandez votre audit gratuit : réponse sous quarante-huit heures.",
+      "image": "Les cartes deviennent les boutons du panneau final ; logo Optikom.",
       "debut": 97.34,
       "fin": 102.33,
       "duree_voix": 4.64
@@ -179,6 +203,7 @@
       "acte": "11 Appel à l'action",
       "texte": "Votre devis sous 24 h.",
       "voix": "Et votre devis sous vingt-quatre heures.",
+      "image": "Le bouton « Votre devis sous 24 h » s'allume.",
       "debut": 102.63,
       "fin": 105.84,
       "duree_voix": 2.86
@@ -187,6 +212,7 @@
       "acte": "11 Appel à l'action",
       "texte": "Optikom, agence web à Vannes · optikom.fr",
       "voix": "Optikom, agence web à Vannes. optikom point f r.",
+      "image": "optikom.fr, Vannes · Golfe du Morbihan, 06 33 46 79 83.",
       "debut": 106.14,
       "fin": 109.91,
       "duree_voix": 3.43
