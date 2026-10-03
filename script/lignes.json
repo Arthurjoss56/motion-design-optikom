@@ -1,0 +1,42 @@
+{
+  "debut": 0.6,
+  "queue": 3.2,
+  "lignes": [
+    {"acte": "1 Problème", "texte": "Vos clients vous cherchent sur Google."},
+    {"acte": "1 Problème", "texte": "Mais ce sont vos concurrents qu'ils trouvent."},
+    {"acte": "1 Problème", "texte": "Votre site ? Daté. Lent sur téléphone."},
+    {"acte": "1 Problème", "texte": "Et pas une seule demande de devis."},
+
+    {"acte": "2 Audit", "texte": "Tout commence par un audit gratuit."},
+    {"acte": "2 Audit", "texte": "Il montre ce qui vous fait perdre des clients."},
+
+    {"acte": "3 Maquette", "texte": "Chaque problème trouve sa solution sur la maquette."},
+    {"acte": "3 Maquette", "texte": "Vous validez tout, avant la moindre ligne de code."},
+
+    {"acte": "4 Construction", "texte": "Votre site se construit à partir de cette maquette."},
+    {"acte": "4 Construction", "texte": "Rapide, clair, pensé pour le téléphone."},
+
+    {"acte": "5 Mise en ligne", "texte": "Il est en ligne. Google le découvre."},
+    {"acte": "5 Mise en ligne", "texte": "Votre fiche Google est prête, à Vannes et dans le Golfe."},
+    {"acte": "5 Mise en ligne", "texte": "Vos clients vous trouvent sur Google."},
+
+    {"acte": "6 Visiteurs", "texte": "Les visiteurs arrivent sur votre site."},
+    {"acte": "6 Visiteurs", "texte": "Ils voient votre travail, vos horaires, votre numéro."},
+
+    {"acte": "7 Demandes", "texte": "Et ils vous écrivent."},
+    {"acte": "7 Demandes", "texte": "Les demandes de devis arrivent dans votre boîte mail."},
+
+    {"acte": "8 Résultat", "texte": "Votre site en ligne à partir de 30 jours.", "voix": "Votre site en ligne à partir de trente jours."},
+    {"acte": "8 Résultat", "texte": "Construit comme le nôtre : 100/100 en vitesse.", "voix": "Construit comme le nôtre : cent sur cent en vitesse."},
+    {"acte": "8 Résultat", "texte": "Un seul interlocuteur, du devis au suivi."},
+
+    {"acte": "9 Garantie", "texte": "Notre garantie : [À COMPLÉTER]", "voix": "Notre garantie : [phrase à compléter, ~3 s]"},
+
+    {"acte": "10 Prix", "texte": "Votre site : à partir de 1 100 €.", "voix": "Votre site : à partir de mille cent euros."},
+    {"acte": "10 Prix", "texte": "Référencement local : à partir de 250 €/mois.", "voix": "Votre référencement local : à partir de deux cent cinquante euros par mois."},
+
+    {"acte": "11 Appel à l'action", "texte": "Audit gratuit sous 48 h.", "voix": "Demandez votre audit gratuit : réponse sous quarante-huit heures."},
+    {"acte": "11 Appel à l'action", "texte": "Votre devis sous 24 h.", "voix": "Et votre devis sous vingt-quatre heures."},
+    {"acte": "11 Appel à l'action", "texte": "Optikom, agence web à Vannes · optikom.fr", "voix": "Optikom, agence web à Vannes. optikom point f r."}
+  ]
+}
