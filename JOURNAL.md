@@ -4,7 +4,7 @@
 - [x] Site étudié : preview.optikom.fr est bloqué par le réseau de la session ; étude faite depuis le code source (dépôt Arthurjoss56/optikom-site : contenus, tokens, composants, offres) + build local et captures de toutes les pages clés.
 - [x] Script v1 (26 phrases, 1:53) et timecodes : `script/`.
 - [x] DESIGN.md + brief Motion v1 : `brief/`.
-- [ ] Génération v1 avec Motion — **bloquée : solde Motion à 0 crédit** (à recharger par Arthur).
+- [ ] Génération v1 avec Motion — **bloquée** : compte Motion sans offre et à 0 crédit ; le DESIGN.md exige l'offre Pro (29 $/mois, 1 250 crédits). Logo et moodboard déjà téléversés (liens valables jusqu'au 10/10/2026).
 - [ ] Contrôle v1 (timecodes des sous-titres, contraste, coupes) → v2…
 
 ## Points ouverts
@@ -15,3 +15,4 @@
 ## Jobs Motion
 | Version | Job | Date | Brief | Statut |
 |---|---|---|---|---|
+| v1 | — | 2026-10-03 | brief/brief-motion-v1.md + brief/DESIGN.md + logo.svg + references/style/moodboard-optikom.jpg | refusé : motion_pro_feature_required (0 crédit) |
