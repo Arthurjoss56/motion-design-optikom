@@ -26,7 +26,8 @@ Pour changer un texte du script : `script/lignes.json` → `python3 outils/timin
 | Version | Fichier | Notes |
 |---|---|---|
 | aperçu | versions/apercu-v1-540p.mp4 | premier montage basse définition (contrôle interne) |
-| v1 | versions/optikom-film-v1.mp4 | 1080p 30 i/s, corrections de transitions |
+| v1 | versions/optikom-film-v1.mp4 | 1080p 30 i/s |
+| v2 | versions/optikom-film-v2.mp4 | 1080p 60 i/s, corrections de la revue DA (cartes noires, CTA, carte plein cadre, titres nés des objets, morphings) |
 
 ## Points ouverts
 - Garantie : « [À COMPLÉTER] » (phrase 21, `film/scene.js` acte 9 + `script/lignes.json`).

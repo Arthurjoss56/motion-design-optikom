@@ -173,6 +173,9 @@ add(fx, whoosh(1.4, 250, 1600), 81.0, 0, G); add(fx, carillon(74, 81), 82.1, 0, 
 add(fx, whoosh(1.4, 250, 1600), 86.0, 0, G)
 add(fx, whoosh(1.6, 200, 1400), 96.4, 0, G * 1.1); add(fx, montee(2.0, 300, 900), 98.8, 0, G * .5)
 add(fx, carillon(77, 84, .8), 106.1, 0, G)
+add(fx, pop(1000), 102.6, 0.3, G * .7); add(fx, carillon(84, 91, .6), 102.7, 0.3, G * .7)
+add(fx, shimmer(1.2), 108.6, 0, 0.02)
+add(fx, pop(700), 11.6, -0.4, G * .7)
 fx = reverb(fx, 1.6, 0.25, 9)
 
 def wav(path, x):

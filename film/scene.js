@@ -54,7 +54,7 @@ const hide = (el, t, o = {}) => tl.to(el, { autoAlpha: 0, y: o.y ?? -14, scale: 
 const to = (el, t, vars, d = 1, e = 'expo.out') => tl.to(el, { ...vars, duration: d, ease: e }, t);
 
 /* caméra (proxy) — x, y = centre visé dans le monde ; s = zoom ; r = roulis ; rx/ry = inclinaison 3D */
-const cam = { x: 0, y: -20, s: 1.12, r: 0, rx: 0, ry: 0 };
+const cam = { x: 40, y: -250, s: 1.62, r: 0, rx: 0, ry: 0 };
 const camTo = (t, d, v, e = 'power3.inOut') => tl.to(cam, { ...v, duration: d, ease: e }, t);
 const P = {}; // proxys numériques (texte tapé, compteurs, progressions)
 
@@ -114,8 +114,8 @@ set0([oldB, oldNet], { autoAlpha: 0 });
 const oldBC = q('.nav-contenu', oldB);
 
 const tDate = titre('Site daté', 2250, -500, 'rouge');
-const tLent = titre('Trop lent', 2250, -500, 'rouge');
-const tZero = titre('0 demande', 2250, -500, 'rouge');
+const tLent = titre('Trop lent', 2960, -330, 'rouge');
+const tZero = titre('0 demande', 1720, 120, 'rouge');
 
 // téléphone lent
 const tel1 = box(mk(`<div class="telephone"><div class="ecran"><span class="encoche"></span><div class="chargement"><div class="roue"></div></div><div class="barre-charge"></div><div class="chrono tnum"><span class="cv">0,0 s</span><small>et la page ne s'affiche toujours pas</small></div></div></div>`), 2960, 80, 310, 630);
@@ -124,7 +124,7 @@ const roue = q('.roue', tel1), chronoV = q('.cv', tel1), barreCharge = q('.barre
 P.chrono = 0; P.charge = 0;
 
 // widget « 0 demande »
-const wid = box(mk(`<div class="carte widget-boite"><span class="ico">${I.mail('#d92d20')}</span><div><div class="lib">Demandes de devis ce mois-ci</div><div class="nb tnum">0</div></div></div>`), 1720, 300, 560, 170);
+const wid = box(mk(`<div class="carte widget-boite"><span class="ico">${I.mail('#d92d20')}</span><div><div class="lib">Demandes de devis ce mois-ci</div><div class="nb tnum">0 demande</div></div></div>`), 1760, 290, 640, 190);
 set0(wid, { autoAlpha: 0 });
 
 /* --- animation acte 1 --- */
@@ -148,17 +148,19 @@ to(rech, 7.6, { autoAlpha: 0.0, filter: 'blur(6px)' }, 1.2, 'power2.inOut');
 show(tDate, 7.95, { y: 18, b: 14, d: .9 });
 hide(tDate, 9.4, { d: .4 });
 show(tel1, 9.0, { x: 120, y: 0, b: 10, d: 1.1 });
-show(tLent, 9.75, { y: 18, b: 14, d: .9 });
+show(tLent, 9.75, { y: 60, s: .7, b: 14, d: 1.0 });
 tl.to(P, { charge: 0.34, duration: 1.5, ease: 'power2.out' }, 9.4);
 tl.to(P, { chrono: 8.4, duration: 1.6, ease: 'power1.inOut' }, 9.6);
 hide(tLent, 11.15, { d: .4 });
 show(wid, 11.1, { y: 60, b: 10, d: 1.0 });
-show(tZero, 11.45, { y: 18, b: 14, d: .9 });
-hide(tZero, 14.15, { d: .5 });
+tl.to(wid, { scale: 1.08, duration: .3, ease: 'power2.out' }, 11.6); tl.to(wid, { scale: 1, duration: .7, ease: 'back.out(2.2)' }, 11.9);
+tl.to(q('.ico', wid), { rotation: -12, duration: .08, yoyo: true, repeat: 5, ease: 'sine.inOut' }, 11.65);
+
 
 // caméra acte 1
-camTo(0, 3.8, { y: 10, s: 1.0 }, 'power2.out');
-camTo(3.8, 3.6, { y: 20, s: 0.97 }, 'sine.inOut');
+camTo(0, 2.2, { x: 20, y: -245, s: 1.5 }, 'sine.inOut');
+camTo(2.2, 2.2, { x: 0, y: 10, s: 1.0 }, 'power3.inOut');
+camTo(4.4, 3.0, { y: 20, s: 0.97 }, 'sine.inOut');
 camTo(7.45, 1.35, { x: 2280, y: 0, s: 0.80, r: -0.6, ry: -3 }, 'power3.inOut');
 camTo(8.8, 5.4, { x: 2240, y: 10, s: 0.84, r: 0, ry: 0 }, 'sine.inOut');
 
@@ -213,7 +215,7 @@ tags.forEach((g, i) => {
   tl.to(g, { autoAlpha: 0, duration: .25, ease: 'none' }, t0 + .75);
   tl.to(lignes[i], { autoAlpha: 1, duration: .3, ease: 'none' }, t0 + .72);
 });
-tl.to(P, { flou: 2, duration: .8, ease: 'power2.inOut' }, 21.2);
+
 
 camTo(14.4, 1.2, { x: 2130, y: 10, s: 0.95 }, 'power3.inOut');
 camTo(15.6, 3.9, { x: 2160, y: 0, s: 0.97 }, 'sine.inOut');
@@ -254,7 +256,8 @@ const REPERES = [[MX + 520, MY + 130], [MX + 1130, MY + 118], [5660 + 130, 90 - 
 const reps = REPERES.map(([x, y], i) => { const r = mk(`<div class="repere">${i + 1}</div>`); at(r, x, y); set0(r, { autoAlpha: 0 }); return r; });
 
 // sortie de l'ancien site, entrée de la maquette
-to(oldB, 22.2, { autoAlpha: 0, filter: 'blur(16px)', scale: .94 }, 1.0, 'power2.inOut');
+tl.to(oldB, { x: (REP.cx - REP.w / 2 + 60) - OLD.cx, y: (REP.cy - REP.h / 2 + 60) - OLD.cy, scale: .04, duration: .9, ease: 'power3.in' }, 21.9);
+tl.to(oldB, { autoAlpha: 0, duration: .25, ease: 'none' }, 22.6);
 to(oldNet, 22.2, { autoAlpha: 0 }, .5, 'none');
 show(maq, 22.55, { x: 60, y: 0, b: 16, d: 1.2 });
 show(tMaq, 23.3, { y: 18, b: 16, d: 1.0 });
@@ -264,8 +267,8 @@ lignes.forEach((l, i) => {
   const t0 = 23.35 + i * 0.85;
   const num = q('.num', l);
   tl.to(num, { backgroundColor: '#084eff', duration: .4, ease: 'power2.out' }, t0);
-  tl.to(q('.avant', l), { autoAlpha: 0, y: -14, duration: .35, ease: 'power2.in' }, t0);
-  tl.to(q('.apres', l), { autoAlpha: 1, y: 0, duration: .6, ease: 'expo.out' }, t0 + .2);
+  tl.to(q('.avant', l), { autoAlpha: 0, y: -16, filter: 'blur(4px)', duration: .25, ease: 'power2.in' }, t0);
+  tl.to(q('.apres', l), { autoAlpha: 1, y: 0, duration: .6, ease: 'expo.out' }, t0 + .3);
   tl.to(l, { backgroundColor: '#dce5fb', duration: .5, ease: 'power2.out' }, t0);
   // fantôme : de la ligne vers sa cible
   const r0 = { x: REP.cx - REP.w / 2 + 34, y: ROWY(i) - 38, w: REP.w - 68, h: 76 };
@@ -353,19 +356,20 @@ const tSite = titre('Votre <span class="accent">site</span>', 5000, -455);
 // carte de performance
 const phare = box(mk(`<div class="carte carte-verre phare"><div class="t"><span>Performance mesurée par Google</span></div><div class="jauges">
   ${['Performance', 'Accessibilité', 'Bonnes pratiques'].map((l) => `<div class="jauge"><div class="jauge-wrap"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" stroke="#dce5fb" stroke-width="9" fill="none"/><circle class="arc" cx="50" cy="50" r="42" stroke="#084eff" stroke-width="9" fill="none" stroke-linecap="round" transform="rotate(-90 50 50)" stroke-dasharray="263.9" stroke-dashoffset="263.9"/></svg><span class="tnum">0</span></div><p>${l}</p></div>`).join('')}
-</div><span class="pastille-illu" style="right:18px;top:16px">Illustration</span></div>`), 4450, -290, 600, 300);
+</div><span class="pastille-illu" style="right:18px;top:16px">Illustration</span></div>`), 4120, -250, 600, 300);
 set0(phare, { autoAlpha: 0 });
 P.jauge = 0;
 
 // ---- animation acte 4
-tl.to(wire, { autoAlpha: 0, filter: 'blur(6px)', duration: .9, ease: 'power2.inOut' }, 33.6);
+
 tl.to(reps, { autoAlpha: 0, scale: .5, duration: .5, ease: 'power2.in', stagger: .05 }, 32.3);
 hide(pastOK, 32.3, { d: .5 });
-tl.set(site, { autoAlpha: 1 }, 32.6);
-SB.forEach((e, k) => show(e, 32.7 + k * .16, { y: 40, b: 10, d: 1.1 }));
+tl.set(site, { autoAlpha: 1 }, 32.2);
+const PAIRES = [WB.nav, WB.titre, WB.lignes, WB.cta, WB.image, [WB.tuiles[0]], [WB.tuiles[1]], [WB.tuiles[2]]];
+SB.forEach((e, k) => { show(e, 32.3 + k * .16, { y: 40, b: 10, d: 1.1 }); tl.to(PAIRES[k], { autoAlpha: 0, filter: 'blur(6px)', duration: .45, ease: 'power2.in' }, 32.25 + k * .16); });
 show(tSite, 32.55, { y: 18, b: 16, d: 1.0 });
 hide(tSite, 35.9, { d: .5 });
-tl.to(q('.maquette-fond', maq), { autoAlpha: 0, duration: .8 }, 33.0);
+tl.to(q('.maquette-fond', maq), { autoAlpha: 0, duration: 1.2 }, 33.6);
 tl.to(q('.url-maq', maq), { autoAlpha: 0, duration: .3 }, 32.6);
 // téléphone : la maquette mobile se remplit puis le téléphone passe devant
 tl.to(wm, { autoAlpha: 0, duration: .6 }, 35.6);
@@ -376,8 +380,8 @@ show(phare, 36.9, { y: 30, b: 12, d: 1.0 });
 tl.to(P, { jauge: 1, duration: 1.6, ease: 'power2.out' }, 37.3);
 
 camTo(32.1, 4.0, { x: 5000, y: 10, s: 0.9 }, 'sine.inOut');
-camTo(36.0, 1.6, { x: 5000, y: 0, s: 0.84 }, 'power3.inOut');
-camTo(37.6, 2.6, { x: 4990, y: 40, s: 0.85 }, 'sine.inOut');
+camTo(36.0, 1.6, { x: 4900, y: 10, s: 0.84 }, 'power3.inOut');
+camTo(37.6, 2.6, { x: 4890, y: 40, s: 0.85 }, 'sine.inOut');
 
 /* =====================================================================
    ACTE 5 — MISE EN LIGNE → RÉFÉRENCEMENT LOCAL
@@ -406,9 +410,9 @@ const ondes = [0, 1, 2, 3].map(() => { const o = mk('<div class="onde"></div>');
 ondes.forEach((o, i) => tl.fromTo(o, { width: 300, height: 300, autoAlpha: .9, borderWidth: 4 }, { width: 3600, height: 3600, autoAlpha: 0, borderWidth: 1, duration: 2.6, ease: 'power2.out', immediateRender: false }, 41.3 + i * .35));
 
 // Carte du Morbihan
-const PAN = { x: 2700, y: -1500, w: 3900, h: 2650 };
+const PAN = { x: 2350, y: -1700, w: 5300, h: 3000 };
 const K = 2.6, VX = 5000 - 577.3 * K, VY = 0 - 484.8 * K; // Vannes au centre du site
-const carte = mk(`<div class="carte-panneau carte-bleue"><div class="trame-large"></div><svg class="contour" viewBox="0 0 1000 824" width="${1000 * K}" height="${824 * K}" style="left:${VX - PAN.x}px;top:${VY - PAN.y}px"><path d="${D.carte.d}" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.9)" stroke-width="2" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg></div>`);
+const carte = mk(`<div class="carte-panneau carte-bleue"><div class="trame-large"></div><svg class="contour" viewBox="0 0 1000 824" width="${1000 * K}" height="${824 * K}" style="left:${VX - PAN.x}px;top:${VY - PAN.y}px"><path d="${D.carte.d}" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.62)" stroke-width="1.15" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg></div>`);
 Object.assign(carte.style, { left: PAN.x + 'px', top: PAN.y + 'px', width: PAN.w + 'px', height: PAN.h + 'px' });
 W.insertBefore(carte, W.querySelector('.navigateur'));
 const contour = q('path', carte);
@@ -420,7 +424,7 @@ const vannes = comms.find((c) => c.nom === 'Vannes');
 const visee = mk(`<div class="visee">${[90, 150, 210].map((r) => `<div class="anneau" style="width:${r}px;height:${r}px"></div>`).join('')}<svg viewBox="0 0 100 100" style="position:absolute;width:260px;height:260px;left:-130px;top:-130px" fill="none" stroke="#fff" stroke-width="1.2" stroke-linecap="round" opacity=".9"><path d="M50 0v26M50 74v26M0 50h26M74 50h26"/></svg></div>`); at(visee, vannes.wx, vannes.wy); set0(visee, { autoAlpha: 0 });
 qa('.anneau', visee).forEach((a) => set0(a, { xPercent: -50, yPercent: -50 }));
 
-tl.to(carte, { clipPath: `circle(3200px at ${5000 - PAN.x}px ${0 - PAN.y}px)`, duration: 2.4, ease: 'power2.inOut' }, 42.0);
+tl.to(carte, { clipPath: `circle(3700px at ${5000 - PAN.x}px ${0 - PAN.y}px)`, duration: 2.4, ease: 'power2.inOut' }, 42.0);
 tl.to(P, { trace: 1, duration: 2.6, ease: 'power2.inOut' }, 43.0);
 // le site se replie dans le repère de Vannes
 tl.to([maq], { scale: 0.04, duration: 1.6, ease: 'power3.inOut', transformOrigin: '50% 50%' }, 42.7);
@@ -436,10 +440,10 @@ const fiche = box(mk(`<div class="carte fiche">
   <div class="photos">${photo('linear-gradient(160deg,#316bff,#063cc8)', I.cle())}${photo('linear-gradient(160deg,#dce5fb,#9db8ff)', I.bain())}${photo('linear-gradient(160deg,#1d5cff,#084eff)', I.flamme())}</div>
   <div class="corps-f"><h3>Votre entreprise</h3><div class="cat">Plombier · Vannes</div><div class="ouvert"><b>Ouvert</b> · Ferme à 19:00</div>
   <div class="actions"><div class="action"><i>${I.tel('#fff')}</i>Appeler</div><div class="action"><i>${I.route()}</i>Itinéraire</div><div class="action"><i>${I.web()}</i>Site web</div><div class="action"><i>${I.partage()}</i>Partager</div></div>
-  <div class="adr">${I.epingle('#56667e').replace('<svg', '<svg width="20" height="20"')}Vannes, Golfe du Morbihan</div></div>
+  <div class="adr">${I.epingle('#56667e').replace('<svg', '<svg width="20" height="20"')}Vannes, Golfe du Morbihan</div><div class="adr" style="border:none;margin-top:6px;padding-top:0">${I.web('#56667e').replace('<svg', '<svg width="20" height="20"')}votre-entreprise.fr</div><div class="adr" style="border:none;margin-top:6px;padding-top:0">${I.tel('#56667e').replace('<svg', '<svg width="20" height="20"')}Appel direct depuis la fiche</div></div>
   <span class="pastille-illu" style="right:16px;top:14px">Illustration</span></div>`), 5730, -40, 500, 650);
 set0(fiche, { autoAlpha: 0 });
-const ficheParts = [q('.photos', fiche), q('h3', fiche), q('.cat', fiche), q('.ouvert', fiche), q('.actions', fiche), q('.adr', fiche)];
+const ficheParts = [q('.photos', fiche), q('h3', fiche), q('.cat', fiche), q('.ouvert', fiche), q('.actions', fiche), ...qa('.adr', fiche)];
 ficheParts.forEach((e) => set0(e, { autoAlpha: 0 }));
 // trait qui relie le repère à la fiche
 const lien = mk(`<svg class="abs" style="left:${vannes.wx}px;top:${vannes.wy - 40}px;overflow:visible" width="10" height="10"><path d="M0 40 C 200 40, 260 0, 480 0" stroke="#fff" stroke-width="3" fill="none" stroke-dasharray="1" stroke-dashoffset="1" pathLength="1" stroke-linecap="round"/></svg>`);
@@ -461,7 +465,7 @@ tl.to(R[1], { top: RTOP + 2 * PITCH, duration: 1.0, ease: 'power3.inOut' }, 50.2
 show(tTrouve, 49.25, { y: 18, b: 16, d: 1.0 });
 hide(tTrouve, 52.4, { d: .5 });
 
-camTo(41.9, 2.8, { x: 5000, y: -60, s: 0.36, r: 0, rx: 4 }, 'power3.inOut');
+camTo(41.9, 2.8, { x: 5000, y: -150, s: 0.42, r: 0, rx: 4 }, 'power3.inOut');
 camTo(44.7, 2.0, { x: 5170, y: 20, s: 0.80, rx: 0 }, 'power3.inOut');
 camTo(46.7, 2.0, { x: 5250, y: -20, s: 0.80 }, 'sine.inOut');
 camTo(48.6, 1.5, { x: 4800, y: 0, s: 0.76, r: 0.3 }, 'power3.inOut');
@@ -504,6 +508,7 @@ const dash = box(mk(`<div class="carte carte-verre tableau"><h3>Visites de votre
 set0(dash, { autoAlpha: 0 });
 P.courbe = 0;
 show(dash, 53.6, { x: -60, y: 0, b: 12, d: 1.1 });
+hide(dash, 56.3, { x: -80, y: 0, d: .7 });
 tl.to(P, { courbe: 1, duration: 3.6, ease: 'power2.inOut' }, 54.1);
 
 // défilement du téléphone : travail, horaires, numéro
@@ -594,7 +599,7 @@ const CH = [
   { cx: 4880, ico: I.personne(), gros: '1', lib: 'Seul interlocuteur', note: 'Le même, du devis au suivi de votre site.' },
 ];
 const CHY = 2950, CHW = 520, CHH = 600;
-const chiffres = CH.map((c) => { const e = box(mk(`<div class="carte carte-bleue chiffre" style="border:none;box-shadow:var(--shadow-accent-lg)"><div class="trame-bleue"></div><span class="ico">${c.ico}</span><div class="gros tnum">${c.gros}</div><div class="lib">${c.lib}</div><div class="note">${c.note}</div></div>`), c.cx, CHY, CHW, CHH); set0(e, { autoAlpha: 0 }); return e; });
+const chiffres = CH.map((c) => { const e = box(mk(`<div class="carte carte-bleue chiffre" style="border:none;box-shadow:var(--shadow-accent-lg)"><div class="trame-bleue"></div><span class="ico">${c.ico}</span><div class="gros tnum">${c.gros}</div><div class="lib">${c.lib}</div><div class="note">${c.note}</div></div>`), c.cx, CHY, CHW, CHH); set0(e, { autoAlpha: 0, filter: 'brightness(1) saturate(1)' }); return e; });
 const c30 = q('.c30', chiffres[0]), c100 = q('.c100', chiffres[1]);
 P.n30 = 0; P.n100 = 0;
 // les 3 premières lignes de la boîte deviennent les 3 cartes bleues
@@ -603,15 +608,17 @@ P.n30 = 0; P.n100 = 0;
   const rx = BOX.cx - BOX.w / 2 + 280 + 30, ry = BOX.cy - BOX.h / 2 + 84 + i * 140;
   const parts = qa('.ico, .gros, .lib, .note', c);
   parts.forEach((e) => set0(e, { autoAlpha: 0 }));
-  tl.set(c, { left: rx, top: ry, width: 830, height: 124, borderRadius: 16, autoAlpha: 1 }, t0);
-  tl.to(c, { left: CH[i].cx - CHW / 2, top: CHY - CHH / 2, width: CHW, height: CHH, borderRadius: 24, duration: 1.35, ease: 'power3.inOut' }, t0);
-  parts.forEach((e, k) => { if (!e.classList.contains('gros')) show(e, t0 + .75 + k * .1, { y: 24, b: 8, d: .9 }); });
+  tl.set(c, { left: rx, top: ry, width: 830, height: 124, borderRadius: 16 }, t0);
+  tl.fromTo(c, { autoAlpha: 0 }, { autoAlpha: 1, duration: .3, ease: 'none', immediateRender: false }, t0);
+  tl.to(c, { left: CH[i].cx - CHW / 2, top: CHY - CHH / 2, width: CHW, height: CHH, borderRadius: 24, duration: 1.05, ease: 'power3.inOut' }, t0);
+  parts.forEach((e, k) => { if (!e.classList.contains('gros')) show(e, t0 + .6 + k * .08, { y: 24, b: 8, d: .9 }); });
 });
-[69.35, 73.35, 77.65].forEach((t0, i) => show(q('.gros', chiffres[i]), t0, { y: 30, s: .9, b: 16, d: 1.1 }));
+[69.35, 73.25, 77.65].forEach((t0, i) => show(q('.gros', chiffres[i]), t0, { y: 30, s: .9, b: 16, d: 1.1 }));
 tl.to(boite, { autoAlpha: 0, filter: 'blur(10px)', duration: .6 }, 68.6);
 tl.to(notif, { autoAlpha: 0, duration: .4 }, 68.5);
-tl.to(P, { n30: 30, duration: 1.5, ease: 'power2.out' }, 69.35);
-tl.to(P, { n100: 100, duration: 1.6, ease: 'power2.out' }, 73.35);
+tl.set(P, { n30: 30 }, 69.3);
+tl.to(P, { n100: 100, duration: .9, ease: 'power2.out' }, 73.25);
+tl.to(q('.gros', chiffres[1]), { scale: 1.07, duration: .25, ease: 'power2.out', transformOrigin: '0% 60%' }, 74.15); tl.to(q('.gros', chiffres[1]), { scale: 1, duration: .6, ease: 'back.out(2)' }, 74.4);
 // mise en avant de la carte dont on parle
 const focusCarte = (i, t) => chiffres.forEach((c, k) => tl.to(c, { scale: k === i ? 1.05 : .96, y: k === i ? -14 : 0, filter: k === i ? 'brightness(1) saturate(1)' : 'brightness(.93) saturate(.85)', duration: .8, ease: 'power3.inOut' }, t));
 focusCarte(0, 70.6); focusCarte(1, 73.3); focusCarte(2, 77.6);
@@ -627,12 +634,15 @@ const GAR = { cx: 4300, cy: 4050, w: 1260, h: 500 };
 const sceau = `<svg viewBox="0 0 210 210" width="240" height="240" fill="none"><circle cx="105" cy="105" r="100" stroke="#084eff" stroke-opacity=".18" stroke-width="2"/><circle class="sc-arc" cx="105" cy="105" r="86" stroke="#084eff" stroke-width="3" stroke-dasharray="540.4" stroke-dashoffset="540.4" transform="rotate(-90 105 105)" stroke-linecap="round"/><circle cx="105" cy="105" r="64" fill="url(#gS)"/><defs><linearGradient id="gS" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#1d5cff"/><stop offset="1" stop-color="#063cc8"/></linearGradient></defs><path d="M105 0v26M105 184v26M0 105h26M184 105h26" stroke="#084eff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/><g transform="translate(75 75) scale(2.5)" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${I.bouclier().replace(/<\/?svg[^>]*>/g, '')}</g></svg>`;
 const gar = box(mk(`<div class="carte carte-verre garantie"><div class="sceau">${sceau}</div><div><h3>Notre garantie</h3><div class="vide">[À COMPLÉTER]</div></div></div>`), GAR.cx, GAR.cy, GAR.w, GAR.h);
 set0(gar, { autoAlpha: 0 });
+qa('.sceau, h3, .vide', gar).forEach((e, k) => show(e, 82.0 + k * .12, { y: 18, b: 8, d: .8 }));
 const garArc = q('.sc-arc', gar);
 P.arc = 0;
-chiffres.forEach((c, i) => tl.to(c, { left: GAR.cx - CHW / 2 + (i - 1) * 60, top: GAR.cy - CHH / 2 - 40, scale: .7, autoAlpha: 0, filter: 'blur(10px)', duration: 1.2, ease: 'power3.inOut' }, 81.1 + i * .05));
-show(gar, 81.75, { y: 40, s: .92, b: 14, d: 1.2 });
+chiffres.forEach((c, i) => { tl.to(qa('.ico, .gros, .lib, .note', c), { autoAlpha: 0, duration: .3, ease: 'power2.in' }, 81.0);
+  tl.to(c, { left: GAR.cx - CHW / 2, top: GAR.cy - CHH / 2, rotation: (i - 1) * 4, scale: .82, duration: 1.0, ease: 'power3.inOut' }, 81.05 + (2 - i) * .06);
+  tl.to(c, { autoAlpha: 0, duration: .35, ease: 'none' }, 81.95); });
+tl.fromTo(gar, { autoAlpha: 0, scale: .55, rotation: -3 }, { autoAlpha: 1, scale: 1, rotation: 0, duration: 1.1, ease: 'expo.out' }, 81.8);
 tl.to(P, { arc: 1, duration: 1.4, ease: 'power2.inOut' }, 82.0);
-camTo(81.0, 1.7, { x: 4300, y: 4050, s: 1.0 }, 'power3.inOut');
+camTo(80.9, 1.5, { x: 4300, y: 4050, s: 1.0 }, 'power3.inOut');
 camTo(82.7, 3.3, { x: 4300, y: 4050, s: 1.03 }, 'sine.inOut');
 
 /* =====================================================================
@@ -653,24 +663,24 @@ PX.forEach((p, i) => {
   tl.to(c, { left: p.cx - PW / 2, top: PY - PH / 2, width: PW, height: PH, duration: 1.4, ease: 'power3.inOut' }, t0);
   parts.forEach((e, k) => show(e, t0 + .8 + k * .09, { y: 22, b: 8, d: .9 }));
 });
-const focusPrix = (i, t) => prix.forEach((c, k) => tl.to(c, { scale: k === i ? 1.04 : .96, y: k === i ? -14 : 0, filter: k === i ? 'brightness(1)' : 'brightness(.94)', duration: .8, ease: 'power3.inOut' }, t));
+const focusPrix = (i, t) => prix.forEach((c, k) => tl.to(c, { scale: k === i ? 1.04 : .97, y: k === i ? -14 : 0, duration: .8, ease: 'power3.inOut' }, t));
 focusPrix(0, 87.6); focusPrix(1, 90.6);
-tl.to(prix, { scale: 1, y: 0, filter: 'brightness(1)', duration: .6 }, 95.6);
+tl.to(prix, { scale: 1, y: 0, duration: .6 }, 95.6);
 camTo(85.9, 1.7, { x: 4300, y: 5150, s: 0.93 }, 'power3.inOut');
 camTo(87.6, 9, { x: 4300, y: 5160, s: 0.95 }, 'sine.inOut');
 
 /* =====================================================================
    ACTE 11 — APPEL À L'ACTION
    ===================================================================== */
-const CTA = { cx: 4300, cy: 6330, w: 1720, h: 820 };
+const CTA = { cx: 4300, cy: 6330, w: 1600, h: 820 };
 const cta = box(mk(`<div class="carte cta" style="border:none"><div class="fond-cta"><div class="h1" style="left:-200px;top:-300px;width:1100px;height:900px"></div><div class="h2" style="right:-300px;bottom:-400px;width:1200px;height:1000px"></div></div></div>`), CTA.cx, CTA.cy, CTA.w, CTA.h);
 set0(cta, { autoAlpha: 0, clipPath: 'inset(8% 30% 78% 30% round 60px)' });
 const cx0 = CTA.cx - CTA.w / 2, cy0 = CTA.cy - CTA.h / 2;
-const pil1 = mk(`<div class="btn btn-primaire cta-pilule"><span class="pt"></span>Audit gratuit sous 48 h</div>`); at(pil1, cx0 + 530, cy0 + 150);
-const pil2 = mk(`<div class="btn btn-inverse cta-pilule"><span class="pt"></span>Votre devis sous 24 h</div>`); at(pil2, cx0 + 1190, cy0 + 150);
+const pil1 = mk(`<div class="btn btn-primaire cta-pilule"><span class="pt"></span>Audit gratuit sous 48 h</div>`); at(pil1, cx0 + 480, cy0 + 150);
+const pil2 = mk(`<div class="btn btn-inverse cta-pilule"><span class="pt"></span>Votre devis sous 24 h</div>`); at(pil2, cx0 + 1120, cy0 + 150);
 const logo = mk(`<img class="cta-logo" src="assets/logo-blanc.svg" style="width:720px">`); at(logo, CTA.cx, cy0 + 395);
 const url = mk(`<div class="cta-url">optikom.fr</div>`); at(url, CTA.cx, cy0 + 585);
-const lieu = mk(`<div class="cta-lieu">${I.epingle('#aebbd0').replace('<svg', '<svg width="22" height="22" style="vertical-align:-3px;margin-right:8px"')}Agence web à Vannes · Golfe du Morbihan</div>`); at(lieu, CTA.cx, cy0 + 700);
+const lieu = mk(`<div class="cta-lieu">${I.epingle('#aebbd0').replace('<svg', '<svg width="22" height="22" style="vertical-align:-3px;margin-right:8px"')}Agence web à Vannes · Golfe du Morbihan<span style="opacity:.45;margin:0 14px">|</span>${I.tel('#aebbd0').replace('<svg', '<svg width="22" height="22" style="vertical-align:-3px;margin-right:8px"')}06 33 46 79 83</div>`); at(lieu, CTA.cx, cy0 + 700);
 [pil1, pil2, logo, url, lieu].forEach((e) => set0(e, { xPercent: -50, yPercent: -50, autoAlpha: 0 }));
 // sphères et anneau en débord
 const sph = [[cx0 - 40, cy0 + 120, 170], [cx0 + CTA.w - 90, cy0 + CTA.h - 150, 220], [cx0 + 260, cy0 + CTA.h - 20, 90]].map(([x, y, r]) => { const s = box(mk('<div class="sphere"></div>'), x, y, r, r); set0(s, { autoAlpha: 0 }); return s; });
@@ -690,17 +700,22 @@ PX.forEach((p, i) => {
 });
 tl.fromTo(cta, { autoAlpha: 1, clipPath: 'inset(8% 30% 78% 30% round 60px)' }, { clipPath: 'inset(0% 0% 0% 0% round 48px)', duration: 1.6, ease: 'power3.inOut' }, 96.9);
 tl.to(pil1, { autoAlpha: 1, filter: 'blur(0px)', duration: .3 }, 97.85);
-tl.to(pil2, { autoAlpha: 1, filter: 'blur(0px)', duration: .3 }, 97.97);
+tl.to(pil2, { autoAlpha: .32, scale: .94, duration: .3 }, 97.97);
+tl.to(pil2, { autoAlpha: 1, scale: 1, duration: .8, ease: 'back.out(2)' }, 102.6);
 // mise en avant tour à tour
 tl.to(pil1, { scale: 1.06, duration: .7, ease: 'power3.out' }, 97.4 + .6); tl.to(pil1, { scale: 1, duration: .8, ease: 'power3.inOut' }, 102.3);
-tl.to(pil2, { scale: 1.06, duration: .7, ease: 'power3.out' }, 102.6); tl.to(pil2, { scale: 1, duration: .8, ease: 'power3.inOut' }, 105.6);
+tl.to(pil2, { scale: 1.05, duration: .5, ease: 'power3.out' }, 103.4); tl.to(pil2, { scale: 1, duration: .8, ease: 'power3.inOut' }, 105.6);
 sph.forEach((s, i) => show(s, 98.2 + i * .2, { s: .7, y: 30, b: 16, d: 1.6 }));
 show(anneauCTA, 98.6, { s: .7, y: 0, b: 14, d: 1.6 });
-tl.fromTo(logo, { autoAlpha: 0, filter: 'blur(26px)', scale: 1.1 }, { autoAlpha: 1, filter: 'blur(0px)', scale: 1, duration: 2.0, ease: 'expo.out' }, 99.0);
+tl.fromTo(logo, { autoAlpha: 0, filter: 'blur(26px)', scale: 1.1 }, { autoAlpha: 1, filter: 'blur(0px)', scale: 1, duration: 2.0, ease: 'expo.out' }, 97.7);
 show(url, 106.1, { y: 24, b: 16, d: 1.2 });
 show(lieu, 106.7, { y: 20, b: 10, d: 1.1 });
+const reflet = mk('<span style="position:absolute;top:0;bottom:0;width:120px;left:-160px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg)"></span>', pil1);
+pil1.style.overflow = 'hidden'; pil1.style.position = 'absolute';
+tl.fromTo(reflet, { x: 0 }, { x: 800, duration: 1.1, ease: 'power2.inOut' }, 108.6);
+tl.to(pil1, { scale: 1.04, duration: .5, ease: 'power2.out' }, 108.5); tl.to(pil1, { scale: 1, duration: .8, ease: 'power3.inOut' }, 109.1);
 camTo(96.3, 2.0, { x: 4300, y: 6350, s: 0.98 }, 'power3.inOut');
-camTo(98.3, DUREE - 98.3, { x: 4300, y: 6345, s: 1.02 }, 'sine.inOut');
+camTo(98.3, DUREE - 98.3, { x: 4300, y: 6360, s: 1.04 }, 'sine.inOut');
 
 /* ---------- éléments optiques de premier plan (profondeur) ---------- */
 const FGS = [
@@ -769,7 +784,7 @@ function sync(t) {
   // enveloppes
   envs.forEach((e, i) => {
     const k = P.env[i]; const sx = ECRAN.x + (MT.envoi ? MT.envoi.x : 160), sy = ECRAN.y + 74 + (MT.envoi ? MT.envoi.y : 500) - MT.sc[4], ex = ENV_DEST.x, ey = ENV_DEST.y;
-    const cx = sx + 600, cy = (sy + ey) / 2 - 200; const u = 1 - k;
+    const cx = sx + 900, cy = sy - 350; const u = 1 - k;
     const x = u * u * sx + 2 * u * k * cx + k * k * ex, y = u * u * sy + 2 * u * k * cy + k * k * ey;
     e.style.left = x + 'px'; e.style.top = y + 'px';
   });

@@ -111,7 +111,7 @@ body { font-family: "Bricolage", system-ui, sans-serif; color: var(--ink); -webk
 .widget-boite .ico { width: 64px; height: 64px; border-radius: 18px; background: var(--rouge-fond); display: grid; place-items: center; flex: none; }
 .widget-boite .ico svg { width: 32px; height: 32px; }
 .widget-boite .lib { font-size: 22px; color: var(--ink-soft); font-weight: 500; }
-.widget-boite .nb { font-size: 64px; font-weight: 700; color: var(--rouge); letter-spacing: -0.03em; line-height: 1.05; }
+.widget-boite .nb { font-size: 60px; white-space: nowrap; font-weight: 700; color: var(--rouge); letter-spacing: -0.03em; line-height: 1.05; }
 
 /* ACTE 2 — audit */
 .loupe { position: absolute; width: 300px; height: 300px; margin: -150px 0 0 -150px; border-radius: 50%; pointer-events: none; }
@@ -151,7 +151,7 @@ body { font-family: "Bricolage", system-ui, sans-serif; color: var(--ink); -webk
 .clic { position: absolute; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%; border: 3px solid var(--accent); }
 
 /* ACTE 4 — site construit */
-.site { position: absolute; inset: 0; background: #fff; overflow: hidden; }
+.site { position: absolute; inset: 0; overflow: hidden; }
 .site .nav { position: absolute; left: 0; right: 0; top: 0; height: 74px; display: flex; align-items: center; padding: 0 40px; gap: 28px; border-bottom: 1px solid var(--mist); }
 .site .marque { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 22px; letter-spacing: -0.02em; }
 .site .marque i { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; }
@@ -205,17 +205,17 @@ body { font-family: "Bricolage", system-ui, sans-serif; color: var(--ink); -webk
 .onde { position: absolute; border-radius: 50%; border: 3px solid var(--accent); }
 
 /* ACTE 5 — carte */
-.carte-panneau { position: absolute; border-radius: 64px; overflow: hidden; box-shadow: var(--shadow-accent-lg); }
+.carte-panneau { position: absolute; border-radius: 64px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, #000 0, #000 82%, transparent 100%); mask-image: linear-gradient(180deg, #000 0, #000 82%, transparent 100%); }
 .carte-panneau .trame-large { position: absolute; inset: 0; background-image: radial-gradient(rgb(255 255 255 / .13) 1.4px, transparent 2px); background-size: 30px 30px;
   -webkit-mask-image: radial-gradient(ellipse 70% 60% at 85% 10%, #000, transparent); mask-image: radial-gradient(ellipse 70% 60% at 85% 10%, #000, transparent); }
 .carte-panneau svg.contour { position: absolute; overflow: visible; }
 .commune { position: absolute; }
 .commune .pt { width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 7px rgb(255 255 255 / .22), 0 6px 14px rgb(6 60 200 / .5); }
-.commune .nom { position: absolute; left: 50%; top: 30px; transform: translateX(-50%); font-size: 30px; font-weight: 600; color: #fff; white-space: nowrap; text-shadow: 0 2px 10px rgb(6 40 140 / .6); }
+.commune .nom { position: absolute; left: 50%; top: 30px; transform: translateX(-50%); font-size: 28px; font-weight: 600; color: #fff; white-space: nowrap; padding: 4px 14px 6px; border-radius: 999px; background: rgb(14 35 64 / .42); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: 1px solid rgb(255 255 255 / .18); }
 .commune .nom.h { top: -62px; }
 .commune .nom.g { left: auto; right: 34px; top: -10px; transform: none; }
 .commune .nom.d { left: 34px; top: -10px; transform: none; }
-.commune .nom.v { font-size: 44px; font-weight: 700; top: -24px; left: 120px; }
+.commune .nom.v { font-size: 40px; font-weight: 700; top: -92px; left: 36px; transform: none; }
 .visee { position: absolute; width: 0; height: 0; }
 .visee .anneau { position: absolute; border-radius: 50%; border: 3px solid rgb(255 255 255 / .9); }
 
@@ -315,7 +315,7 @@ body { font-family: "Bricolage", system-ui, sans-serif; color: var(--ink); -webk
 .cta-pilule { position: absolute; font-size: 40px; padding: 30px 46px; gap: 18px; }
 .cta-pilule .pt { width: 18px; height: 18px; border-radius: 50%; background: currentColor; opacity: .9; }
 .cta-logo { position: absolute; filter: drop-shadow(0 10px 40px rgb(49 107 255 / .35)); }
-.cta-url { position: absolute; font-size: 96px; font-weight: 650; letter-spacing: -0.04em; color: #fff; white-space: nowrap; }
+.cta-url { position: absolute; font-size: 92px; font-weight: 650; letter-spacing: -0.012em; color: #fff; white-space: nowrap; }
 .cta-lieu { position: absolute; font-size: 26px; font-weight: 500; color: var(--fog); padding: 12px 26px; border-radius: 999px; background: rgb(255 255 255 / .06); border: 1px solid rgb(255 255 255 / .14); white-space: nowrap; }
 
 /* Éléments optiques (sphères de verre) */
@@ -327,6 +327,6 @@ body { font-family: "Bricolage", system-ui, sans-serif; color: var(--ink); -webk
 /* Sous-titres */
 #subs { display: flex; justify-content: center; align-items: flex-end; padding-bottom: 54px; }
 .sub { font-weight: 600; font-size: 44px; letter-spacing: -0.01em; line-height: 1.15; color: #fff; padding: 16px 34px 18px; border-radius: 999px; white-space: nowrap;
-  background: rgb(14 35 64 / .84); -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%);
+  background: rgb(14 35 64 / .92); -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / .14), 0 10px 30px -10px rgb(14 35 64 / .5); border: 1px solid rgb(255 255 255 / .12); opacity: 0; }
 .sub.probleme { box-shadow: inset 0 1px 0 rgb(255 255 255 / .14), inset 0 0 0 2px rgb(229 72 77 / .9), 0 10px 30px -10px rgb(14 35 64 / .5); }
