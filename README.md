@@ -13,3 +13,17 @@ Voir `JOURNAL.md` (état, numéro de job Motion, versions, prochaine étape).
 - `references/style/` : références de style (captures du site, logo) — uniquement pour guider Motion, jamais collées dans le film.
 - `references/site/sections/` : captures du site découpé par sections (source : build local du dépôt optikom-site).
 - `versions/` : vidéos rendues (v1, v2…) + images-clés de contrôle.
+
+## Livrables
+| Fichier | Contenu |
+|---|---|
+| `versions/optikom-film-v5.mp4` | Film final : 1920×1080, 60 i/s, H.264, sous-titres incrustés, musique + bruitages (−26,5 LUFS, place laissée à la voix) |
+| `script/script-voix-off.md` | Script de la voix off : timecode de début/fin de chaque phrase, texte à dire, ce qu'on voit à l'image |
+| `script/sous-titres.srt` / `.vtt` | Sous-titres séparés (mêmes timecodes) |
+| `audio/musique.flac`, `audio/bruitages.flac`, `audio/mix.flac` | Pistes séparées (48 kHz) pour le mixage avec la voix |
+
+## Fabrication
+Le film est entièrement reconstruit en code (aucune capture d'écran collée) : `film/index.html` + `film/style.css`
+(tokens du site preview.optikom.fr) + `film/scene.js` (scène unique, une seule caméra, timeline GSAP déterministe),
+rendu image par image dans Chromium (`film/render.mjs`), monté avec ffmpeg (`outils/monter.sh`).
+Musique et bruitages synthétisés par `outils/audio.py` (libres de droits).

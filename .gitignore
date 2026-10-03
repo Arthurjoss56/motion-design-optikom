@@ -3,3 +3,6 @@ __pycache__/
 *.tmp
 versions/frames*/
 audio/*.wav
+versions/optikom-film-v2.mp4
+versions/optikom-film-v4.mp4
+versions/optikom-film-v3.mp4

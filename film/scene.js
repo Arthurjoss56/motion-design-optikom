@@ -422,6 +422,7 @@ P.trace = 0;
 const comms = D.carte.communes.map((c) => { const wx = VX + c.x * K, wy = VY + c.y * K; const cote = { 'Vannes': 'd v', 'Séné': 'b', 'Saint-Avé': 'h', 'Arradon': 'g', 'Plescop': 'g', 'Theix-Noyalo': 'd', 'Auray': 'b', 'Sarzeau': 'b' }[c.nom] || 'b';
   const e = mk(`<div class="commune"><div class="pt"></div><div class="nom ${cote}">${c.nom}</div></div>`); at(e, wx, wy); set0(e, { xPercent: -50, yPercent: -50, autoAlpha: 0 }); return { ...c, wx, wy, el: e }; });
 const vannes = comms.find((c) => c.nom === 'Vannes');
+const theix = comms.find((c) => c.nom === 'Theix-Noyalo');
 const visee = mk(`<div class="visee">${[90, 150, 210].map((r) => `<div class="anneau" style="width:${r}px;height:${r}px"></div>`).join('')}<svg viewBox="0 0 100 100" style="position:absolute;width:260px;height:260px;left:-130px;top:-130px" fill="none" stroke="#fff" stroke-width="1.2" stroke-linecap="round" opacity=".9"><path d="M50 0v26M0 50h26M74 50h26"/></svg></div>`); at(visee, vannes.wx, vannes.wy); set0(visee, { autoAlpha: 0 });
 qa('.anneau', visee).forEach((a) => set0(a, { xPercent: -50, yPercent: -50 }));
 
@@ -511,8 +512,9 @@ const dash = box(mk(`<div class="carte carte-verre tableau"><h3>Visites de votre
 set0(dash, { autoAlpha: 0 });
 P.courbe = 0;
 show(dash, 53.6, { x: -60, y: 0, b: 12, d: 1.1 });
+hide(theix.el, 56.0, { y: 0, d: .5 });
 hide(dash, 56.3, { x: -80, y: 0, d: .7 });
-tl.to(P, { courbe: 1, duration: 3.6, ease: 'power2.inOut' }, 54.1);
+tl.to(P, { courbe: 1, duration: 2.6, ease: 'power2.inOut' }, 53.7);
 
 // défilement du téléphone : travail, horaires, numéro
 const focusA = mk('<div class="focus-anneau"></div>', q('.ecran', tel3)); set0(focusA, { autoAlpha: 0 });
@@ -534,8 +536,8 @@ function mesuresTel() {
 }
 const scrollPx = () => { const i = Math.min(3, Math.floor(P.sc)), k = P.sc - i; return lerp(MT.sc[i], MT.sc[Math.min(4, i + 1)], k); };
 
-camTo(52.6, 1.4, { x: 4180, y: 0, s: 0.84, r: 0 }, 'power2.inOut');
-camTo(54.0, 2.6, { x: 4160, y: 0, s: 0.86 }, 'sine.inOut');
+camTo(52.6, 1.4, { x: 4300, y: 0, s: 0.84, r: 0 }, 'power2.inOut');
+camTo(54.0, 2.6, { x: 4290, y: 0, s: 0.86 }, 'sine.inOut');
 camTo(56.5, 1.3, { x: 4330, y: 30, s: 1.1, r: -0.3 }, 'power2.inOut');
 camTo(57.8, 3.6, { x: 4340, y: 40, s: 1.13, r: 0 }, 'sine.inOut');
 
@@ -589,7 +591,7 @@ P.notifIdx = 0;
 ENVS.forEach((t0, i) => tl.to(P, { notifIdx: i, duration: .01 }, t0 + 1.32));
 show(boite, 62.7, { y: 60, b: 12, d: 1.2 });
 
-camTo(61.3, 0.9, { x: 4250, y: 60, s: 1.1 }, 'sine.inOut');
+camTo(61.3, 0.9, { x: 4340, y: 60, s: 1.1 }, 'sine.inOut');
 camTo(62.4, 2.1, { x: 4330, y: 1700, s: 0.98, r: 0.4, rx: -3 }, 'power2.inOut');
 camTo(64.4, 4.2, { x: 4330, y: 1720, s: 1.0, r: 0, rx: 0 }, 'sine.inOut');
 
@@ -657,22 +659,24 @@ const PX = [{ cx: 3950, cls: 'bleu carte-bleue', ico: I.web('#fff'), h: 'Créati
             { cx: 4650, cls: 'blanc', ico: I.epingle('#fff'), h: 'Référencement local', m: '250 €', s: '/mois', li: ['Fiche Google complète', 'Présence à Vannes et dans le Golfe', 'Suivi chaque mois'] }];
 const PY = 5150, PW = 660, PH = 700;
 const prix = PX.map((p) => { const e = box(mk(`<div class="carte prix ${p.cls}" style="${p.cls.includes('bleu') ? 'border:none;box-shadow:var(--shadow-accent-lg)' : ''}">${p.cls.includes('bleu') ? '<div class="trame-bleue"></div>' : ''}<span class="ico ${p.cls.includes('bleu') ? '' : 'ico-bleu'}">${p.ico}</span><h3>${p.h}</h3><div class="apd">à partir de</div><div class="montant">${p.m}<small>${p.s}</small></div><ul>${p.li.map((l) => `<li><i>${I.coche(p.cls.includes('bleu') ? '#fff' : '#084eff', 3)}</i>${l}</li>`).join('')}</ul><div class="tva">TVA non applicable, art. 293 B du CGI</div></div>`), p.cx, PY, PW, PH); set0(e, { autoAlpha: 0 }); return e; });
-// la garantie se divise en deux cartes
-tl.to(qa('.sceau, h3, .vide', gar), { autoAlpha: 0, filter: 'blur(8px)', duration: .45, ease: 'power2.in' }, 85.9);
-tl.to(gar, { autoAlpha: 0, duration: .4, ease: 'none' }, 86.45);
+// la garantie descend avec la caméra, puis se divise en deux cartes
+const GY = PY - GAR.h / 2;
+tl.to(gar, { top: GY, duration: 1.35, ease: 'power2.inOut' }, 85.5);
+tl.to(qa('.sceau, h3, .vide', gar), { autoAlpha: 0, filter: 'blur(6px)', duration: .25, ease: 'power2.in' }, 86.7);
+tl.to(gar, { autoAlpha: 0, duration: .3, ease: 'none' }, 86.9);
 PX.forEach((p, i) => {
-  const c = prix[i], t0 = 86.15 + i * .1;
+  const c = prix[i], t0 = 86.85 + i * .06;
   const parts = qa('.ico, h3, .apd, .montant, ul, .tva', c);
   parts.forEach((e) => set0(e, { autoAlpha: 0 }));
-  tl.set(c, { left: GAR.cx - GAR.w / 2, top: GAR.cy - GAR.h / 2, width: GAR.w, height: GAR.h }, t0);
-  tl.fromTo(c, { autoAlpha: 0 }, { autoAlpha: 1, duration: .45, ease: 'power1.inOut', immediateRender: false }, t0);
-  tl.to(c, { left: p.cx - PW / 2, top: PY - PH / 2, width: PW, height: PH, duration: 1.4, ease: 'power3.inOut' }, t0);
-  parts.forEach((e, k) => show(e, t0 + .8 + k * .09, { y: 22, b: 8, d: .9 }));
+  tl.set(c, { left: GAR.cx - GAR.w / 2 + (i ? GAR.w / 2 : 0), top: GY, width: GAR.w / 2, height: GAR.h }, t0);
+  tl.fromTo(c, { autoAlpha: 0 }, { autoAlpha: 1, duration: .3, ease: 'power1.inOut', immediateRender: false }, t0);
+  tl.to(c, { left: p.cx - PW / 2, top: PY - PH / 2, width: PW, height: PH, duration: .95, ease: 'power3.inOut' }, t0);
+  parts.forEach((e, k) => show(e, t0 + .2 + k * .07, { y: 22, b: 8, d: .8 }));
 });
 const focusPrix = (i, t) => prix.forEach((c, k) => tl.to(c, { scale: k === i ? 1.04 : .97, y: k === i ? -14 : 0, duration: .8, ease: 'power3.inOut' }, t));
 focusPrix(0, 87.6); focusPrix(1, 90.6);
 tl.to(prix, { scale: 1, y: 0, duration: .6 }, 95.6);
-camTo(85.7, 2.0, { x: 4300, y: 5150, s: 0.93 }, 'power2.inOut');
+camTo(85.5, 1.7, { x: 4300, y: 5150, s: 0.93 }, 'power2.inOut');
 camTo(87.6, 9, { x: 4300, y: 5160, s: 0.95 }, 'sine.inOut');
 
 /* =====================================================================
@@ -680,7 +684,7 @@ camTo(87.6, 9, { x: 4300, y: 5160, s: 0.95 }, 'sine.inOut');
    ===================================================================== */
 const CTA = { cx: 4300, cy: 6330, w: 1600, h: 820 };
 const cta = box(mk(`<div class="carte cta" style="border:none"><div class="fond-cta"><div class="h1" style="left:-200px;top:-300px;width:1100px;height:900px"></div><div class="h2" style="right:-300px;bottom:-400px;width:1200px;height:1000px"></div></div></div>`), CTA.cx, CTA.cy, CTA.w, CTA.h);
-set0(cta, { autoAlpha: 0, clipPath: 'inset(8% 30% 78% 30% round 60px)' });
+set0(cta, { autoAlpha: 0 });
 const cx0 = CTA.cx - CTA.w / 2, cy0 = CTA.cy - CTA.h / 2;
 const pil1 = mk(`<div class="btn btn-primaire cta-pilule"><span class="pt"></span>Audit gratuit sous 48 h${I.fleche}</div>`); at(pil1, cx0 + 480, cy0 + 150);
 const pil2 = mk(`<div class="btn btn-inverse cta-pilule"><span class="pt"></span>Votre devis sous 24 h${I.fleche}</div>`); at(pil2, cx0 + 1120, cy0 + 150);
@@ -692,21 +696,17 @@ const lieu = mk(`<div class="cta-lieu">${I.epingle('#aebbd0').replace('<svg', '<
 const sph = [[cx0 + 40, cy0 + 130, 150], [cx0 + CTA.w - 90, cy0 + CTA.h - 150, 220], [cx0 + 260, cy0 + CTA.h - 20, 90]].map(([x, y, r]) => { const s = box(mk('<div class="sphere"></div>'), x, y, r, r); set0(s, { autoAlpha: 0 }); return s; });
 const anneauCTA = mk(`<div class="anneau-optique" style="width:300px;height:300px">${I.vise('rgba(255,255,255,.55)')}</div>`); box(anneauCTA, cx0 + 150, cy0 + 560, 300, 300); set0(anneauCTA, { autoAlpha: 0 });
 
-// les cartes de prix se transforment en boutons
+// les cartes de prix se transforment en boutons (elles voyagent avec la caméra)
 PX.forEach((p, i) => {
-  const g = mk(`<div class="ghost ${i ? '' : 'carte-bleue'}" style="${i ? 'background:#fff;' : ''}box-shadow:var(--shadow-lg)"></div>`);
-  const tgt = i ? pil2 : pil1;
-  Object.assign(g.style, { left: p.cx - PW / 2 + 'px', top: PY - PH / 2 + 'px', width: PW + 'px', height: PH + 'px', opacity: 0, borderRadius: '24px' });
-  const pw = i ? 560 : 590, ph = 110;
-  tl.to(qa('.ico, h3, .apd, .montant, ul, .tva, .trame-bleue', prix[i]), { autoAlpha: 0, duration: .3, ease: 'power2.in' }, 96.25 + i * .08);
-  tl.set(g, { autoAlpha: 1 }, 96.5 + i * .12);
-  tl.set(prix[i], { autoAlpha: 0 }, 96.5 + i * .12);
-  tl.to(g, { left: parseFloat(tgt.style.left) - pw / 2, top: parseFloat(tgt.style.top) - ph / 2, width: pw, height: ph, borderRadius: 60, duration: 1.15, ease: 'power3.inOut' }, 96.5 + i * .12);
-  tl.to(g, { autoAlpha: 0, duration: .3 }, 97.6 + i * .12);
+  const c = prix[i], tgt = i ? pil2 : pil1, pw = i ? 600 : 620, ph = 116;
+  tl.to(c, { left: parseFloat(tgt.style.left) - pw / 2, top: parseFloat(tgt.style.top) - ph / 2, width: pw, height: ph, borderRadius: 60, duration: 1.25, ease: 'power2.inOut' }, 96.25 + i * .06);
+  tl.to(qa('.ico, .apd, ul, .tva', c), { autoAlpha: 0, duration: .15, ease: 'power2.in' }, 96.05);
+  tl.to(qa('h3, .montant, .trame-bleue', c), { autoAlpha: 0, duration: .2, ease: 'power2.in' }, 96.65);
+  tl.to(c, { autoAlpha: 0, duration: .2, ease: 'none' }, 97.55 + i * .06);
 });
-tl.fromTo(cta, { autoAlpha: 1, clipPath: 'inset(8% 30% 78% 30% round 60px)' }, { clipPath: 'inset(0% 0% 0% 0% round 48px)', duration: 1.6, ease: 'power3.inOut' }, 96.9);
-tl.to(pil1, { autoAlpha: 1, filter: 'blur(0px)', duration: .3 }, 97.5);
-tl.to(pil2, { autoAlpha: .32, scale: .94, duration: .3 }, 97.62);
+tl.fromTo(cta, { autoAlpha: 0, scale: .92 }, { autoAlpha: 1, scale: 1, duration: 1.2, ease: 'power3.out' }, 97.45);
+tl.to(pil1, { autoAlpha: 1, filter: 'blur(0px)', duration: .25 }, 97.5);
+tl.to(pil2, { autoAlpha: .5, scale: .96, duration: .25 }, 97.56);
 tl.to(pil2, { autoAlpha: 1, scale: 1, duration: .8, ease: 'back.out(2)' }, 102.6);
 // mise en avant tour à tour
 tl.to(pil1, { scale: 1.06, duration: .7, ease: 'power3.out' }, 97.4 + .6); tl.to(pil1, { scale: 1, duration: .8, ease: 'power3.inOut' }, 102.3);
@@ -720,7 +720,7 @@ const reflet = mk('<span style="position:absolute;top:0;bottom:0;width:120px;lef
 pil1.style.overflow = 'hidden'; pil1.style.position = 'absolute';
 tl.fromTo(reflet, { x: 0 }, { x: 800, duration: 1.1, ease: 'power2.inOut' }, 108.6);
 tl.to(pil1, { scale: 1.04, duration: .5, ease: 'power2.out' }, 108.5); tl.to(pil1, { scale: 1, duration: .8, ease: 'power3.inOut' }, 109.1);
-camTo(96.1, 2.3, { x: 4300, y: 6350, s: 0.98 }, 'power2.inOut');
+camTo(96.0, 1.9, { x: 4300, y: 6350, s: 0.98 }, 'power2.inOut');
 camTo(98.3, DUREE - 98.3, { x: 4300, y: 6362, s: 1.07 }, 'sine.inOut');
 
 /* ---------- éléments optiques de premier plan (profondeur) ---------- */
