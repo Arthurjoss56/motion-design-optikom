@@ -1,18 +1,34 @@
-# Journal de production
+# Journal de production — film Optikom
+
+## Décision (3 octobre 2026)
+Motion (MCP) abandonné à la demande d'Arthur (compte sans crédit). Le film est **fabriqué en code** :
+scène HTML/CSS + timeline GSAP déterministe (`film/`), rendue image par image dans Chromium (`film/render.mjs`),
+montée avec ffmpeg (`outils/monter.sh`). Musique et bruitages synthétisés (`outils/audio.py`), pistes séparées.
+
+## Reprendre le travail
+```bash
+cd film && node render.mjs --at 12,45,98 --scale 0.5 --out /tmp/chk        # images de contrôle
+node render.mjs --fps 60 --scale 1 --workers 4 --out ../versions/frames-vX  # rendu complet
+cd .. && python3 outils/audio.py && outils/monter.sh versions/frames-vX 60 versions/optikom-film-vX.mp4 18
+```
+Les images rendues (`versions/frames-*`) ne sont pas versionnées (régénérables).
+Pour changer un texte du script : `script/lignes.json` → `python3 outils/timing.py` → `python3 outils/donnees_film.py`
+(attention : la timeline de `film/scene.js` est calée sur les timecodes actuels).
 
 ## État
-- [x] Site étudié : preview.optikom.fr est bloqué par le réseau de la session ; étude faite depuis le code source (dépôt Arthurjoss56/optikom-site : contenus, tokens, composants, offres) + build local et captures de toutes les pages clés.
-- [x] Script v1 (26 phrases, 1:53) et timecodes : `script/`.
-- [x] DESIGN.md + brief Motion v1 : `brief/`.
-- [ ] Génération v1 avec Motion — **bloquée** : compte Motion sans offre et à 0 crédit ; le DESIGN.md exige l'offre Pro (29 $/mois, 1 250 crédits). Logo et moodboard déjà téléversés (liens valables jusqu'au 10/10/2026).
-- [ ] Contrôle v1 (timecodes des sous-titres, contraste, coupes) → v2…
+- [x] Étude du site (code source du dépôt optikom-site + build local + captures).
+- [x] Script et timecodes (`script/`).
+- [x] Moteur de rendu + film v1 complet (11 actes, une seule caméra, sous-titres incrustés).
+- [x] Musique + bruitages v1 (`audio/`).
+- [ ] Revue v1 → v2 (finitions, 60 i/s).
+
+## Versions
+| Version | Fichier | Notes |
+|---|---|---|
+| aperçu | versions/apercu-v1-540p.mp4 | premier montage basse définition (contrôle interne) |
+| v1 | versions/optikom-film-v1.mp4 | 1080p 30 i/s, corrections de transitions |
 
 ## Points ouverts
-- Garantie : laissée en « [À COMPLÉTER] » (ligne 21). Formulation existante sur le site, si besoin : « Ce que nous garantissons, c'est un travail méthodique et une transparence totale : chaque mois, un point clair sur vos positions, vos clics et vos demandes » (/agence-seo/vannes/).
-- « Résultat en chiffres » : le site interdit les chiffres inventés (CLAUDE.md). Seuls des chiffres réels sont utilisés : 30 jours (mise en ligne, à partir de), 100/100 Lighthouse (optikom.fr, sept. 2026), 1 interlocuteur, 48 h / 24 h, prix. Tableau de bord et boîte mail marqués « Illustration ». À remplacer par un résultat client mesuré si Arthur en fournit un.
-- Délais 24 h / 48 h : « heures ouvrées » sur le site (offre.ts).
-
-## Jobs Motion
-| Version | Job | Date | Brief | Statut |
-|---|---|---|---|---|
-| v1 | — | 2026-10-03 | brief/brief-motion-v1.md + brief/DESIGN.md + logo.svg + references/style/moodboard-optikom.jpg | refusé : motion_pro_feature_required (0 crédit) |
+- Garantie : « [À COMPLÉTER] » (phrase 21, `film/scene.js` acte 9 + `script/lignes.json`).
+- Chiffres : uniquement réels (30 jours, 100/100 optikom.fr sept. 2026, 1 interlocuteur, 48 h, 24 h, prix). Tableau de bord, fiche Google, boîte mail = « Illustration ». Noms des demandes (Claire M., Thomas L.…) fictifs.
+- Délais 24 h / 48 h : « ouvrées » sur le site.
