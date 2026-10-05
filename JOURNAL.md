@@ -47,7 +47,7 @@ Les images rendues (`versions/frames-*`) et les WAV ne sont pas versionnés (ré
       bas de carte découpé en côte ; jauge visible ; cartes voisines entières, floutées ; son à −16 LUFS / −1 dBTP.
 - [x] Contrôles automatiques : `film/verif-texte.mjs` (texte, caméra) ; animations sans chevauchement de propriété
       (rendu identique quel que soit le processus qui calcule l'image).
-- [ ] Rendu final 1080p60 avec flou de mouvement → `versions/optikom-film-v6.mp4`, livraison.
+- [x] Rendu final 1080p60 avec flou de mouvement → `versions/optikom-film-v6.mp4` (52 Mo, −16,1 LUFS), livré le 5 octobre.
 
 ## Versions
 | Version | Fichier | Notes |
