@@ -5,9 +5,10 @@ Les bruitages suivent les repères exportés par la scène (film/render.mjs --cu
 chaque clic, frappe, notification… est donc calé à l'image près, même si la timeline bouge.
 
 Sorties (48 kHz, stéréo) dans audio/ :
-  musique.wav / .flac    pulsation électronique douce, 112 BPM, discrète (place pour la voix off)
-  bruitages.wav / .flac  interface « digital » : clics, frappe, whooshs, notifications
-  mix.wav / .flac        musique + bruitages (~ -25 LUFS : la voix off viendra par-dessus)
+  musique.wav / .flac    pulsation électronique douce, 112 BPM, discrète (place pour la voix off) — pistes séparées
+  bruitages.wav / .flac  interface « digital » : clics, frappe, whooshs, notifications            à -27 LUFS chacune
+  mix.wav / .flac        mix du film : -16 LUFS intégré, crête vraie ≤ -1 dBTP (limiteur) ; pour ajouter la voix,
+                         repartir des deux pistes séparées
 """
 import json, pathlib, subprocess, wave
 import numpy as np
@@ -169,7 +170,7 @@ def s_logo():
 def s_brillance():
     d = 1.0; tt = t_(d); return bp(bruit(d), 5000, 9000, 2) * np.sin(np.pi * tt / d) ** 2 * .12
 
-SONS = {'clic': (s_clic, .9), 'frappe': (s_frappe, .55), 'entree': (s_entree, .9), 'pop': (s_pop, .6), 'erreur': (s_erreur, .8),
+SONS = {'clic': (s_clic, 1.15), 'frappe': (s_frappe, .7), 'entree': (s_entree, .9), 'pop': (s_pop, .6), 'erreur': (s_erreur, .8),
         'whoosh': (s_whoosh, .55), 'ding': (s_ding, .6), 'valide': (s_valide, .6), 'pin': (None, .6), 'montee': (s_montee, .4),
         'deploi': (s_deploi, .6), 'boom': (s_boom, .9), 'goutte': (s_goutte, .35), 'defile': (s_defile, .4), 'envoi': (s_envoi, .5),
         'tick': (s_tick, .5), 'lent': (s_lent, .7), 'scan': (s_scan, .35), 'aspire': (s_aspire, .5), 'logo': (s_logo, .6), 'brillance': (s_brillance, .25)}
@@ -197,10 +198,26 @@ def lufs(path):
 
 n = int(DUREE * SR)
 mus, fx = mus[:, :n], fx[:, :n]
-for x, nom, cible in ((mus, "musique", -27.0), (fx, "bruitages", -29.5)):
+for x, nom, cible in ((mus, "musique", -27.0), (fx, "bruitages", -27.0)):
     x /= np.abs(x).max() + 1e-9; x *= .5
     ecrire(OUT / f"{nom}.wav", x); g = 10 ** ((cible - lufs(OUT / f"{nom}.wav")) / 20); x *= g
     ecrire(OUT / f"{nom}.wav", x); print(nom, round(lufs(OUT / f"{nom}.wav"), 1), "LUFS, crête", round(20 * np.log10(np.abs(x).max() + 1e-9), 1), "dBFS")
-ecrire(OUT / "mix.wav", mus + fx); print("mix", round(lufs(OUT / "mix.wav"), 1), "LUFS")
+def mesure(path):  # intensité intégrée (LUFS) et crête vraie (dBTP)
+    o = subprocess.run(["ffmpeg", "-hide_banner", "-i", str(path), "-af", "ebur128=peak=true", "-f", "null", "-"], capture_output=True, text=True).stderr.splitlines()
+    return float([l for l in o if l.strip().startswith("I:")][-1].split()[1]), float([l for l in o if l.strip().startswith("Peak:")][-1].split()[1])
+# mix du film : gain vers -16 LUFS puis limiteur (crête vraie ≤ -1 dBTP), ajusté en quelques passes
+ecrire(OUT / "mix_brut.wav", mus + fx)
+CIBLE, PLAFOND = -16.0, -1.0
+g, lim = CIBLE - lufs(OUT / "mix_brut.wav"), PLAFOND - .7
+for _ in range(5):
+    subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(OUT / "mix_brut.wav"), "-af",
+                    f"volume={g:.2f}dB,alimiter=limit={10 ** (lim / 20):.4f}:attack=2:release=60:level=disabled",
+                    "-c:a", "pcm_s24le", str(OUT / "mix.wav")], check=True)
+    I, tp = mesure(OUT / "mix.wav")
+    if abs(I - CIBLE) <= .2 and tp <= PLAFOND: break
+    g += CIBLE - I
+    if tp > PLAFOND: lim -= tp - PLAFOND + .1
+(OUT / "mix_brut.wav").unlink()
+print("mix", I, "LUFS, crête vraie", tp, "dBTP")
 for nom in ("musique", "bruitages", "mix"):
     subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(OUT / f"{nom}.wav"), "-c:a", "flac", str(OUT / f"{nom}.flac")], check=True)

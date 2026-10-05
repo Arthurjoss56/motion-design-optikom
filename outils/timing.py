@@ -2,7 +2,7 @@
 """Calcule les timecodes de la voix off et du texte à l'image à partir de script/lignes.json.
 
 Règles : débit de lecture naturel (réglage « cps »), chaque phrase affichée au moins
-« min_duree » secondes (> 1,5 s exigé), jamais deux phrases en même temps (« ecart » entre
+« min_duree » secondes (> 1,5 s exigé ; « min » par ligne si l'animation du texte le demande), jamais deux phrases en même temps (« ecart » entre
 deux phrases), respiration plus longue entre deux actes (« pause_acte »).
 Chaque phrase porte un identifiant (« id ») : la timeline du film (film/scene.js) s'accroche
 à ces identifiants, donc l'image suit automatiquement si le script change.
@@ -34,7 +34,7 @@ def main():
         if "debut_force" in ligne:
             t = max(t, ligne["debut_force"])
         dite = len(ligne.get("voix", ligne["texte"])) / CPS
-        duree = max(MIN_DUREE, dite + TENUE, len(ligne["texte"]) / 17 + 0.4)
+        duree = max(ligne.get("min", MIN_DUREE), dite + TENUE, len(ligne["texte"]) / 17 + 0.4)
         sortie.append({**ligne, "debut": round(t, 2), "fin": round(t + duree, 2), "duree_voix": round(dite, 2)})
         t += duree + ECART
         acte_prec = ligne["acte"]

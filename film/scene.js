@@ -72,19 +72,19 @@ const cue = (type, t, v = 1) => CUES.push({ type, t: Math.round(t * 1000) / 1000
 /* ---------- décor ---------- */
 mk('<div id="grille"></div>');
 mk('<div id="reperes"></div>');
-[[0, 0, 1900], [2380, 0, 2100], [4600, 60, 2400], [4450, 1960, 2100], [4450, 3050, 1800], [4450, 4110, 2100], [4450, 5300, 2500]]
+[[0, 0, 1900], [2380, 0, 2100], [4600, 60, 2400], [4450, 1960, 2100], [4450, 3050, 1800], [4450, 4110, 2100]]
   .forEach(([x, y, r], i) => box(mk(`<div class="halo ${i % 2 ? '' : 'halo-fort'}"></div>`), x + (i % 2 ? 300 : -250), y - 120, r, r * .8));
 
 /* =====================================================================
    TEXTE CINÉTIQUE — les phrases du script vivent dans l'animation
    Balises : [[accent surligné]]  {{rouge}}  ((doux))  <<daté>>  %%lent%%
    ===================================================================== */
-const typo = (s) => s.replace(/ ([?!:;])/g, ' $1').replace(/(\d) (\d{3})/g, '$1 $2').replace(/ (€|h\b)/g, ' $1');
+const typo = (s) => s.replace(/ ([?!:;])/g, ' $1').replace(/(\d) (\d{3})/g, '$1 $2').replace(/ (€|h\b)/g, ' $1');
 function decoupe(m) {
-  const re = /\[\[(.+?)\]\]|\{\{(.+?)\}\}|\(\((.+?)\)\)|<<(.+?)>>|%%(.+?)%%/g; const segs = []; let i = 0, x;
+  const re = /\[\[(.+?)\]\]|\{\{(.+?)\}\}|\(\((.+?)\)\)|<<(.+?)>>|%%(.+?)%%|\{#(.+?)#\}/g; const segs = []; let i = 0, x;
   while ((x = re.exec(m))) {
     if (x.index > i) segs.push({ cls: '', txt: m.slice(i, x.index) });
-    segs.push({ cls: x[1] ? 'acc' : x[2] ? 'rouge' : x[3] ? 'doux' : x[4] ? 'vieux rouge' : 'lent rouge', txt: x[1] || x[2] || x[3] || x[4] || x[5] });
+    segs.push({ cls: x[1] ? 'acc' : x[2] ? 'rouge' : x[3] ? 'doux' : x[4] ? 'vieux rouge' : x[5] ? 'lent rouge' : 'grp', txt: x[1] || x[2] || x[3] || x[4] || x[5] || x[6] });
     i = re.lastIndex;
   }
   if (i < m.length) segs.push({ cls: '', txt: m.slice(i) });
@@ -93,32 +93,35 @@ function decoupe(m) {
 const motHTML = (w, cls) => `<span class="mw"><span class="mot"><span class="mi ${cls}">${cls.includes('lent') ? [...w].map((c) => `<span class="ch">${c}</span>`).join('') : w}</span></span></span>`;
 const rendre = (m) => decoupe(typo(m)).map(({ cls, txt }) => {
   const html = txt.split(/( )/).map((p) => p === ' ' ? ' ' : p ? motHTML(p, cls) : '').join('');
-  return cls === 'acc' ? `<span class="seg-acc"><i class="surligne"></i>${html}</span>` : html;
+  return cls === 'acc' ? `<span class="seg-acc"><i class="surligne"></i>${html}</span>` : cls === 'grp' ? `<span class="grp">${html}</span>` : html;
 }).join('');
 const PHRASES = [];
 function phrase(id, x, y, markup, o = {}) {
-  const el = mk(`<div class="phrase ${o.blanc ? 'blanc' : ''}" style="font-size:${o.taille || 80}px"></div>`);
+  const el = mk(`<div class="phrase ${o.blanc ? 'blanc' : ''}" data-id="${id}" style="font-size:${o.taille || 80}px"></div>`);
   el.innerHTML = rendre(markup);
   const plain = el.textContent.replace(/[  ]/g, ' ').replace(/\s+/g, ' ').trim();
   if (plain !== L[id].texte) console.error(`TEXTE ≠ SCRIPT [${id}] « ${plain} » / « ${L[id].texte} »`);
   at(el, x, y); set0(el, { xPercent: o.align === 'g' ? 0 : -50, yPercent: -50 });
-  const mis = qa('.mi', el), surl = qa('.surligne', el), t0 = T(id, o.decal || 0);
-  set0(mis, { autoAlpha: 0 }); if (surl.length) set0(surl, { scaleX: 0 });
+  const tous = qa('.mi', el), surl = qa('.surligne', el), t0 = T(id, o.decal || 0);
+  const mis = tous.filter((m) => !m.closest('.grp')); // les mots d'un groupe {#…#} entrent autrement (voir s1)
+  set0(tous, { autoAlpha: 0 }); if (surl.length) set0(surl, { scaleX: 0 });
   const e = o.entree || 'mots';
-  if (e === 'mots') tl.fromTo(mis, { autoAlpha: 0, yPercent: 105, filter: 'blur(8px)' }, { autoAlpha: 1, yPercent: 0, filter: 'blur(0px)', duration: .75, stagger: .05, ease: 'expo.out', immediateRender: false }, t0);
-  else if (e === 'flou') tl.fromTo(mis, { autoAlpha: 0, filter: 'blur(22px)', scale: 1.1 }, { autoAlpha: 1, filter: 'blur(0px)', scale: 1, duration: .8, stagger: .09, ease: 'power2.out', immediateRender: false }, t0);
+  if (e === 'mots') tl.fromTo(mis, { autoAlpha: 0, yPercent: 105, filter: 'blur(8px)' }, { autoAlpha: 1, yPercent: 0, filter: 'blur(0px)', duration: .5, stagger: .03, ease: 'expo.out', immediateRender: false }, t0);
+  else if (e === 'flou') tl.fromTo(mis, { autoAlpha: 0, filter: 'blur(22px)', scale: 1.1 }, { autoAlpha: 1, filter: 'blur(0px)', scale: 1, duration: .55, stagger: .05, ease: 'power2.out', immediateRender: false }, t0);
   else if (e === 'boites') {
     qa('.mw', el).forEach((w) => w.insertAdjacentHTML('beforeend', '<i class="boite"></i>'));
     const bx = qa('.boite', el); set0(bx, { scaleX: 0 });
-    tl.to(bx, { scaleX: 1, duration: .32, stagger: .07, ease: 'power3.out' }, t0);
-    tl.fromTo(mis, { autoAlpha: 0, yPercent: 50 }, { autoAlpha: 1, yPercent: 0, duration: .45, stagger: .07, ease: 'expo.out', immediateRender: false }, t0 + .16);
-    tl.to(bx, { autoAlpha: 0, duration: .3, stagger: .05 }, t0 + 1.05);
+    tl.to(bx, { scaleX: 1, duration: .26, stagger: .05, ease: 'power3.out' }, t0);
+    tl.fromTo(mis, { autoAlpha: 0, yPercent: 50 }, { autoAlpha: 1, yPercent: 0, duration: .4, stagger: .05, ease: 'expo.out', immediateRender: false }, t0 + .1);
+    tl.to(bx, { autoAlpha: 0, duration: .3, stagger: .04 }, t0 + .85);
   }
-  if (surl.length) tl.to(surl, { scaleX: 1, duration: .55, ease: 'power3.inOut' }, t0 + (o.surl ?? .42));
-  qa('.lent', el).forEach((w) => { const ch = qa('.ch', w); set0(ch, { opacity: 0 }); tl.to(ch, { opacity: 1, duration: .01, stagger: o.lent ?? .09, ease: 'none' }, t0 + (o.decalLent ?? .5)); });
+  if (surl.length) tl.to(surl, { scaleX: 1, duration: .45, ease: 'power3.inOut' }, t0 + (o.surl ?? .3));
+  let nLent = 0; const pas = o.lent ?? .045;
+  qa('.lent', el).forEach((w) => { const ch = qa('.ch', w); set0(ch, { opacity: 0 }); tl.to(ch, { opacity: 1, duration: .01, stagger: pas, ease: 'none' }, t0 + (o.decalLent ?? .35) + nLent * pas); nLent += ch.length + 1; });
   if (o.sortie !== false) {
-    tl.to(mis, { autoAlpha: 0, yPercent: -45, filter: 'blur(8px)', duration: .24, stagger: .01, ease: 'power2.in' }, F(id, -.22));
-    if (surl.length) tl.to(surl, { opacity: 0, duration: .2 }, F(id, -.22));
+    // sortie : commence à la fin de la phrase, terminée avant l'entrée de la suivante (écart 0,25 s)
+    tl.to(tous, { autoAlpha: 0, yPercent: -45, filter: 'blur(8px)', duration: .2, stagger: .006, ease: 'power2.in' }, F(id, -.02));
+    if (surl.length) tl.to(surl, { opacity: 0, duration: .18 }, F(id, -.02));
   }
   PHRASES.push({ el, o });
   return el;
@@ -135,16 +138,16 @@ function tapeHTML(s) {
    CURSEURS NUMÉRIQUES (étiquetés, avec clic)
    ===================================================================== */
 const CURSEURS = [];
-function curseur(nom, couleur) {
-  const el = mk(`<div class="curseur" style="--c:${couleur}"><svg viewBox="0 0 24 24"><path d="M4 2.5 L4 20.5 L8.7 16.1 L12.2 23.3 L15.6 21.7 L12.2 14.6 L19 14.6 Z" fill="${couleur}" stroke="#fff" stroke-width="1.7" stroke-linejoin="round"/></svg><i class="onde-clic"></i><span class="etiq">${nom}</span></div>`);
-  const c = { el, x: 0, y: 0, svg: q('svg', el), onde: q('.onde-clic', el) };
+function curseur(nom, couleur, clair = false) { // clair : flèche blanche cernée de bleu nuit (lisible sur fond sombre)
+  const el = mk(`<div class="curseur" style="--c:${couleur}"><div class="cz"><svg viewBox="0 0 24 24"><path d="M4 2.5 L4 20.5 L8.7 16.1 L12.2 23.3 L15.6 21.7 L12.2 14.6 L19 14.6 Z" fill="${clair ? '#fff' : couleur}" stroke="${clair ? '#0e2340' : '#fff'}" stroke-width="1.7" stroke-linejoin="round"/></svg><i class="onde-clic"></i><span class="etiq">${nom}</span></div></div>`);
+  const c = { el, x: 0, y: 0, svg: q('svg', el), onde: q('.onde-clic', el), cz: q('.cz', el) };
   set0(el, { autoAlpha: 0 });
   c.pose = (t, x, y) => tl.set(c, { x, y }, t);
   c.va = (t, x, y, d = .65, e = 'power3.inOut') => tl.to(c, { x, y, duration: d, ease: e }, t);
   c.montre = (t, x, y) => { if (x !== undefined) c.pose(t, x, y); tl.fromTo(el, { autoAlpha: 0, scale: .5 }, { autoAlpha: 1, scale: 1, duration: .35, ease: 'back.out(2)', immediateRender: false }, t); };
   c.cache = (t) => tl.to(el, { autoAlpha: 0, scale: .6, duration: .28, ease: 'power2.in' }, t);
   c.appuie = (t) => tl.to(c.svg, { scale: .78, duration: .07, ease: 'power2.in' }, t);
-  c.relache = (t) => tl.to(c.svg, { scale: 1, duration: .3, ease: 'back.out(3)' }, t);
+  c.relache = (t) => tl.to(c.svg, { scale: 1, duration: .22, ease: 'back.out(3)' }, t);
   c.clic = (t, son = true) => { c.appuie(t); c.relache(t + .07);
     tl.fromTo(c.onde, { scale: .2, opacity: .95 }, { scale: 1.5, opacity: 0, duration: .55, ease: 'expo.out', immediateRender: false }, t + .04);
     if (son) cue('clic', t); };
@@ -164,7 +167,7 @@ function selection(r, t, d = .6, dim = '') {
 }
 function touche(x, y, label, t, tAppui) {
   const k = mk(`<div class="touche">${label}</div>`); at(k, x, y); set0(k, { xPercent: -50, yPercent: -50, autoAlpha: 0 });
-  tl.fromTo(k, { autoAlpha: 0, scale: .6, y: 10 }, { autoAlpha: 1, scale: 1, y: 0, duration: .3, ease: 'back.out(2)', immediateRender: false }, t);
+  tl.fromTo(k, { autoAlpha: 0, scale: .6, y: 10 }, { autoAlpha: 1, scale: 1, y: 0, duration: Math.min(.3, tAppui - t - .01), ease: 'back.out(2)', immediateRender: false }, t);
   tl.to(k, { y: 4, boxShadow: '0 0px 0 #cfd8e6, 0 2px 6px rgba(14,35,64,.12)', duration: .06, ease: 'power2.in' }, tAppui);
   tl.to(k, { y: 0, boxShadow: '0 4px 0 #cfd8e6, 0 12px 24px -6px rgba(14,35,64,.09)', duration: .18, ease: 'power2.out' }, tAppui + .08);
   tl.to(k, { autoAlpha: 0, scale: .8, duration: .25, ease: 'power2.in' }, tAppui + .32);
@@ -214,10 +217,10 @@ phrase('p2', 0, -392, 'Ils trouvent vos {{concurrents.}}', { taille: 84 });
 
 // clic dans la barre, frappe, suggestions, Entrée, résultats
 set0(rech, { height: 136 });
-show(rech, 0.0, { y: 30, s: .97, b: 16, d: 1.1 });
-show(illuR, 0.4, { y: 8, b: 4, d: .6 });
-curClient.montre(.3, 470, 380);
-curClient.va(.35, -330, -224, .75);
+tl.fromTo(rech, { autoAlpha: 1, scale: .975, y: 10 }, { scale: 1, y: 0, duration: 1.4, ease: 'power2.out' }, 0);
+show(illuR, 0.25, { y: 8, b: 4, d: .6 });
+curClient.montre(.15, 470, 380);
+curClient.va(.2, -330, -224, .75);
 curClient.clic(1.12);
 curClient.va(1.3, 200, -190, .45, 'power2.out');
 tl.to(barre, { borderColor: '#084eff', boxShadow: '0 0 0 4px rgba(49,107,255,.15), 0 12px 24px -6px rgba(14,35,64,.09)', duration: .25 }, 1.15);
@@ -279,11 +282,14 @@ to(q('.slot-txt', slot), tA, { autoAlpha: 0 }, .2, 'none');
 to(q('.croix-rouge', slot), tA, { autoAlpha: 0 }, .2, 'none');
 to(rech, tA + .1, { autoAlpha: 0, filter: 'blur(8px)' }, .5, 'power2.in');
 to(illuR, tA, { autoAlpha: 0 }, .3, 'none');
-tl.fromTo(oldB, { autoAlpha: 0, filter: 'blur(12px)' }, { autoAlpha: 1, filter: 'blur(0px)', duration: .55, ease: 'power2.out', immediateRender: false }, tA + .62);
-to(slot, tA + .95, { autoAlpha: 0 }, .25, 'none');
+// l'ancien site est la fenêtre qui s'ouvre dans le cadre rouge : même rectangle, même courbe
+tl.set(oldB, { left: SLOT.x, top: SLOT.y, width: SLOT.w, height: SLOT.h, borderRadius: 18 }, tA);
+to(oldB, tA, { left: OLD.x, top: OLD.y, width: OLD.w, height: OLD.h, borderRadius: 22 }, 1.0, 'power2.inOut');
+tl.fromTo(oldB, { autoAlpha: 0 }, { autoAlpha: 1, duration: .3, ease: 'power1.inOut', immediateRender: false }, tA + .3);
+to(slot, tA + .6, { autoAlpha: 0 }, .1, 'none');
 cue('whoosh', tA, 1);
 
-phrase('p3', 2380, -392, 'Votre site ? <<Daté.>> %%Trop lent.%%', { taille: 84, decalLent: .55, lent: .09 });
+phrase('p3', 2380, -392, 'Votre site ? <<Daté.>> %%Trop lent.%%', { taille: 84, decalLent: .35, lent: .045 });
 show(tel1, T('p3', .4), { x: 140, y: 0, b: 10, d: .8 });
 tl.to(P, { charge: .34, duration: 1.4, ease: 'power2.out' }, T('p3', .5));
 tl.to(P, { chrono: 8.4, duration: 1.35, ease: 'power1.inOut' }, T('p3', .55));
@@ -347,8 +353,7 @@ tags.forEach((g, i) => {
   tl.to(g, { autoAlpha: 0, duration: .15, ease: 'none' }, t0 + .45);
   tl.to(lignes[i], { autoAlpha: 1, duration: .2, ease: 'none' }, t0 + .42);
 });
-tl.to(P, { lx: 2700, ly: -560, duration: .5, ease: 'power3.in' }, tS(3) + .45);
-to(loupe, tS(3) + .7, { autoAlpha: 0, scale: .6 }, .3, 'power2.in');
+to(loupe, tS(3) + .5, { autoAlpha: 0, scale: 1.45, filter: 'blur(10px)' }, .4, 'power2.in');
 cue('whoosh', tS(3) + .45, .5);
 // l'ancien site est aspiré dans le rapport
 tl.to(oldB, { x: (REP.cx - REP.w / 2 + 55) - (OLD.x + OLD.w / 2), y: (REP.cy - REP.h / 2 + 55) - (OLD.y + OLD.h / 2), scale: .03, duration: .6, ease: 'power3.in' }, F('a1', -.75));
@@ -401,7 +406,7 @@ const CIBLES = [{ bs: WB.titre, base: DF }, { bs: WB.image, base: DF }, { bs: WM
 
 const tC = F('a1') - .05; // départ vers l'éditeur
 camTo(tC, .95, { x: 4600, y: 60, s: .96, ry: -3, r: -.4 });
-camTo(tC + .95, F('m2') - tC - .95, { x: 4612, y: 66, s: .968, ry: 0, r: 0 }, 'sine.inOut');
+camTo(tC + .95, F('m2') - .02 - tC - .95, { x: 4612, y: 66, s: .968, ry: 0, r: 0 }, 'sine.inOut');
 cue('whoosh', tC, 1);
 // le rapport devient le panneau des calques
 to(rap, tC, { left: PANEL.x, top: PANEL.y, width: PANEL.w, height: PANEL.h, borderRadius: 16 }, .95, 'power2.inOut');
@@ -415,35 +420,35 @@ show(libDF, tC + .7, { y: 8, b: 4, d: .5 }); show(libMF, tC + .78, { y: 8, b: 4,
 
 phrase('m1', 4612, -352, 'Votre maquette [[corrige chaque point.]]', { taille: 80, entree: 'boites', surl: 1.0 });
 // le curseur Optikom pose chaque bloc
-curOptikom.montre(T('m1', .0), 4300, 520);
+curOptikom.montre(T('m1', -.15), 4300, 520);
 CIBLES.forEach((c, i) => {
-  const t0 = T('m1', .2 + i * .52);
+  const t0 = T('m1', .02 + i * .62);
   const ry = ROWR(i) - (REP.cy - REP.h / 2) + PANEL.y + 4;  // ligne du panneau
-  const rx = PANEL.x + 200;
-  curOptikom.va(t0, rx, ry, .28);
-  curOptikom.appuie(t0 + .3);
+  const rx = PANEL.x + PANEL.w - 16; // dans la marge droite de la ligne, jamais sur le texte
+  curOptikom.va(t0, rx, ry, .24);
+  curOptikom.appuie(t0 + .26);
   // la ligne passe du problème à la solution
   const l = lignes[i];
-  tl.to(q('.num', l), { backgroundColor: '#084eff', duration: .25 }, t0 + .3);
-  tl.to(q('.avant', l), { autoAlpha: 0, y: -14, filter: 'blur(4px)', duration: .2, ease: 'power2.in' }, t0 + .3);
-  tl.to(q('.apres', l), { autoAlpha: 1, y: 0, duration: .45, ease: 'expo.out' }, t0 + .38);
-  tl.to(l, { backgroundColor: '#dce5fb', duration: .3 }, t0 + .3);
+  tl.to(q('.num', l), { backgroundColor: '#084eff', duration: .25 }, t0 + .26);
+  tl.to(q('.avant', l), { autoAlpha: 0, y: -14, filter: 'blur(4px)', duration: .2, ease: 'power2.in' }, t0 + .26);
+  tl.to(q('.apres', l), { autoAlpha: 1, y: 0, duration: .45, ease: 'expo.out' }, t0 + .34);
+  tl.to(l, { backgroundColor: '#dce5fb', duration: .3 }, t0 + .26);
   // bloc fantôme glissé jusqu'à sa place
   const g = mk('<div class="ghost" style="background:rgba(8,78,255,.14);border:2px solid rgba(8,78,255,.6);border-radius:10px"></div>');
   rect(g, { x: rx - 70, y: ry - 22, w: 140, h: 44 }); set0(g, { autoAlpha: 0, zIndex: 32 });
   const tx = c.r.x + c.r.w / 2, ty = c.r.y + c.r.h / 2;
-  tl.set(g, { autoAlpha: 1 }, t0 + .32);
-  tl.to(g, { left: tx - 70, top: ty - 22, duration: .38, ease: 'power3.inOut' }, t0 + .34);
-  curOptikom.va(t0 + .34, tx + 40, ty + 10, .38);
-  tl.to(g, { left: c.r.x, top: c.r.y, width: c.r.w, height: c.r.h, duration: .18, ease: 'power2.out' }, t0 + .72);
-  tl.to(g, { autoAlpha: 0, duration: .15 }, t0 + .88);
-  curOptikom.relache(t0 + .74); cue('clic', t0 + .74, .7);
-  c.bs.forEach((b, k) => show(b, t0 + .74 + k * .04, { y: 0, s: .92, b: 3, d: .4 }));
-  selection({ x: c.r.x - 4, y: c.r.y - 4, w: c.r.w + 8, h: c.r.h + 8 }, t0 + .74, .5, `${Math.round(c.r.w)} × ${Math.round(c.r.h)}`);
-  cue('pop', t0 + .76, .5);
+  tl.set(g, { autoAlpha: 1 }, t0 + .28);
+  tl.to(g, { left: tx - 70, top: ty - 22, duration: .32, ease: 'power3.inOut' }, t0 + .3);
+  curOptikom.va(t0 + .3, tx + 40, ty + 10, .32);
+  tl.to(g, { left: c.r.x, top: c.r.y, width: c.r.w, height: c.r.h, duration: .16, ease: 'power2.out' }, t0 + .62);
+  tl.to(g, { autoAlpha: 0, duration: .15 }, t0 + .78);
+  curOptikom.relache(t0 + .63); cue('clic', t0 + .63, .7);
+  c.bs.forEach((b, k) => show(b, t0 + .63 + k * .04, { y: 0, s: .92, b: 3, d: .4 }));
+  selection({ x: c.r.x - 4, y: c.r.y - 4, w: c.r.w + 8, h: c.r.h + 8 }, t0 + .63, .5, `${Math.round(c.r.w)} × ${Math.round(c.r.h)}`);
+  cue('pop', t0 + .65, .5);
 });
-[...WB.nav, ...WB.lignes, ...WB.tuiles].forEach((b, k) => show(b, T('m1', .35) + k * .09, { y: 10, b: 3, d: .5 }));
-curOptikom.cache(T('m1', 2.62));
+[...WB.nav, ...WB.lignes, ...WB.tuiles].forEach((b, k) => show(b, T('m1', -.12) + k * .06, { y: 10, b: 3, d: .5 }));
+curOptikom.cache(T('m1', 2.64));
 // validation par le client
 phrase('m2', 4612, -352, 'Vous validez [[avant qu\'on code.]]', { taille: 80 });
 const VALX = EDIT.x + EDIT.w - 105, VALY = EDIT.y + 24;
@@ -515,9 +520,9 @@ tl.to([df, mf], { borderColor: 'rgba(214,222,234,0)', boxShadow: 'none', duratio
 tl.to(df, { borderRadius: 0, duration: .3 }, tD);
 show(tel2, tD + .1, { s: .96, y: 0, b: 4, d: .5 });
 to(qa('.entete-r, .ligne-r', rap), tD, { autoAlpha: 0 }, .25, 'none');
-to(rap, tD + .05, { left: CODE.x, top: CODE.y, width: CODE.w, height: CODE.h, backgroundColor: '#0e2340', borderColor: '#0e2340', borderRadius: 18 }, .45, 'power2.inOut');
-tl.set(codeEl, { autoAlpha: 1 }, tD + .5);
-tl.set(rap, { autoAlpha: 0 }, tD + .55);
+to(rap, tD + .05, { left: CODE.x, top: CODE.y, width: CODE.w, height: CODE.h, backgroundColor: '#0e2340', borderColor: '#0e2340', borderRadius: 18 }, .36, 'power2.inOut');
+tl.set(codeEl, { autoAlpha: 1 }, tD + .41);
+tl.set(rap, { autoAlpha: 0 }, tD + .45);
 cue('whoosh', tD, .5);
 
 // le code s'écrit ; chaque ligne terminée fait apparaître le bloc correspondant du vrai site
@@ -561,18 +566,43 @@ const MSC = 280 / 326;
 q('.mobile-l', mf).innerHTML = `<div style="position:absolute;left:0;top:0;width:326px;height:${560 / MSC}px;transform:scale(${MSC});transform-origin:0 0">${mobileHTML(false)}</div>`;
 const mob2 = q('.mobile', mf); set0(mob2, { autoAlpha: 0 });
 
-phrase('s1', 4575, -300, 'Votre site se construit. [[Rapide, pensé mobile.]]', { taille: 72, decal: .95, fit: 1800 });
-// préambule tapé en code : <h1>Votre site se construit.</h1>
-const H1 = '<h1>Votre site se construit.</h1>';
-const pc = mk('<div class="phrase-code" style="font-size:54px"></div>'); at(pc, 4575, -300); set0(pc, { xPercent: -50, yPercent: -50, autoAlpha: 0 });
+const s1El = phrase('s1', 4575, -300, '{#Votre site se construit.#} [[Rapide, pensé mobile.]]', { taille: 72, decal: 1.19, fit: 1800 });
+// préambule tapé en code : <h1>Votre site se construit.</h1>, puis la ligne de code DEVIENT le titre :
+// les balises s'effacent, le texte mono glisse et se transforme en titre à sa place exacte (mesurée après chargement des polices)
+const H1A = '<h1>', H1T = 'Votre site se construit.', H1B = '</h1>', H1 = H1A + H1T + H1B;
+const pc = mk('<div class="phrase-code" style="font-size:54px"><span class="tg pc-a"></span><span class="pc-t" style="display:inline-block"></span><span class="tg pc-b"></span><span class="caret"></span></div>');
+const pcA = q('.pc-a', pc), pcT = q('.pc-t', pc), pcB = q('.pc-b', pc), pcC = q('.caret', pc);
+at(pc, 4575, -300); set0(pc, { yPercent: -50, autoAlpha: 0 });
 tl.set(pc, { autoAlpha: 1 }, T('s1'));
 frappe('h1', H1, T('s1', .02), 44, .55);
-tl.to(pc, { autoAlpha: 0, filter: 'blur(10px)', y: -16, duration: .22, ease: 'power2.in' }, T('s1', .82));
-SYNC.push((t) => { const n = Math.round(P.h1); pc.innerHTML = tapeHTML(H1.slice(0, n)) + (t < T('s1', .8) ? `<span class="caret" style="opacity:${Math.floor(t * 3) % 2 ? .25 : 1}"></span>` : ''); });
+const tMorph = T('s1', .8);
+tl.to(pcA, { autoAlpha: 0, x: -24, filter: 'blur(6px)', duration: .25, ease: 'power2.in' }, tMorph);
+tl.to(pcB, { autoAlpha: 0, x: 24, filter: 'blur(6px)', duration: .25, ease: 'power2.in' }, tMorph);
+cue('whoosh', tMorph, .35);
+SYNC.push((t) => { const n = Math.round(P.h1 || 0);
+  const a = H1A.slice(0, clamp(n, 0, 4)), b = H1T.slice(0, clamp(n - 4, 0, H1T.length)), c = H1B.slice(0, clamp(n - 4 - H1T.length, 0, 5));
+  if (pcA.textContent !== a) pcA.textContent = a; if (pcT.textContent !== b) pcT.textContent = b; if (pcB.textContent !== c) pcB.textContent = c;
+  pcC.style.opacity = t < tMorph ? (Math.floor(t * 3) % 2 ? .25 : 1) : 0; });
+function morphH1() { // appelée quand les polices sont prêtes (positions réelles)
+  pcA.textContent = H1A; pcT.textContent = H1T; pcB.textContent = H1B;
+  const pcW = pc.offsetWidth - pcC.offsetWidth - 2, pcL = 4575 - pcW / 2;
+  pc.style.left = pcL + 'px';
+  const grp = q('.grp', s1El), sL = 4575 - s1El.offsetWidth / 2;
+  const tL0 = pcL + pcT.offsetLeft, tW = pcT.offsetWidth, gL = sL + grp.offsetLeft, gW = grp.offsetWidth;
+  const k = gW / tW, dx = gL - tL0;
+  pcA.textContent = pcT.textContent = pcB.textContent = '';
+  set0(pcT, { transformOrigin: '0% 50%' }); set0(grp, { transformOrigin: '0% 50%' });
+  tl.to(pcT, { x: dx, scale: k, duration: .5, ease: 'power3.inOut' }, tMorph);
+  tl.to(pcT, { autoAlpha: 0, filter: 'blur(4px)', duration: .16, ease: 'power1.inOut' }, tMorph + .16);
+  tl.set(qa('.mi', grp), { autoAlpha: 1 }, tMorph);
+  set0(grp, { autoAlpha: 0 });
+  tl.fromTo(grp, { x: -dx / k, scale: 1 / k }, { x: 0, scale: 1, duration: .5, ease: 'power3.inOut', immediateRender: false }, tMorph);
+  tl.fromTo(grp, { autoAlpha: 0, filter: 'blur(4px)' }, { autoAlpha: 1, filter: 'blur(0px)', duration: .26, ease: 'power1.out', immediateRender: false }, tMorph + .16);
+}
 // le code de la page
 const CODE_TXT = CODE_L.map(([c]) => c);
 const totalCode = CODE_TXT.reduce((a, c) => a + c.length, 0);
-const tCode0 = T('s1', -.05), tCode1 = F('s1', -1.1);
+const tCode0 = tD + .43, tCode1 = F('s1', -1.1);
 P.code = 0;
 tl.to(P, { code: totalCode, duration: tCode1 - tCode0, ease: 'none' }, tCode0);
 let cumul = 0;
@@ -594,9 +624,9 @@ SYNC.push(() => {
     if (el.innerHTML !== html) el.innerHTML = html; });
 });
 show(statut, tCode1 + .05, { y: 6, b: 2, d: .3 });
-show(piedBtn, tCode1 + .15, { y: 14, b: 4, d: .5 });
+show(piedBtn, tCode1 + .15, { y: 14, b: 4, d: .44 });
 // score de performance
-const PERF = { cx: 4205, cy: 300, w: 330, h: 120 };
+const PERF = { cx: 4330, cy: 494, w: 330, h: 120 };
 const perf = box(mk(`<div class="carte carte-verre" style="display:flex;align-items:center;gap:18px;padding:16px 22px;border-radius:20px">
   <div style="position:relative;width:84px;height:84px;flex:none"><svg viewBox="0 0 100 100" width="84" height="84"><circle cx="50" cy="50" r="42" stroke="#dce5fb" stroke-width="10" fill="none"/><circle class="arc" cx="50" cy="50" r="42" stroke="#084eff" stroke-width="10" fill="none" stroke-linecap="round" transform="rotate(-90 50 50)" stroke-dasharray="263.9" stroke-dashoffset="263.9"/></svg><span class="tnum perf-n" style="position:absolute;inset:0;display:grid;place-items:center;font-size:30px;font-weight:700">0</span></div>
   <div><div style="font-size:22px;font-weight:650">Performance</div><div style="font-size:15px;color:var(--ink-soft)">Score Google · Illustration</div></div></div>`), PERF.cx, PERF.cy, PERF.w, PERF.h);
@@ -612,10 +642,10 @@ cue('montee', F('s1', -.85), .5);
    ===================================================================== */
 const tE = F('s1') - .5;   // clic « Mettre en ligne »
 curOptikom.montre(tE - .55, 4250, 560);
-curOptikom.va(tE - .5, CODE.x + CODE.w / 2 + 40, CODE.y + CODE.h - 40, .45);
+curOptikom.va(tE - .5, CODE.x + CODE.w - 52, CODE.y + CODE.h - 36, .45); // à droite du libellé
 curOptikom.clic(tE);
 tl.to(piedBtn, { scale: .94, duration: .07 }, tE); tl.to(piedBtn, { scale: 1, duration: .3, ease: 'back.out(2.5)' }, tE + .07);
-const DEP = { cx: BRW.x + BRW.w / 2, cy: BRW.y + 150, w: 440, h: 112 };
+const DEP = { cx: 4870, cy: 494, w: 440, h: 112 };
 const dep = box(mk(`<div class="deploi carte-verre"><div class="l1"><b><span class="d-i1">${I.lecture('#084eff')}</span><span class="d-i2" style="display:none">${I.coche('#084eff', 3)}</span></b><span class="d-t1">Mise en ligne…</span><span class="d-t2" style="display:none">En ligne · votre-entreprise.fr</span></div><div class="barre"><i></i></div><div class="et">images optimisées ✓ · sécurité HTTPS ✓</div></div>`), DEP.cx, DEP.cy, DEP.w, DEP.h);
 set0(dep, { autoAlpha: 0, zIndex: 35 });
 const depBarre = q('.barre i', dep);
@@ -641,8 +671,8 @@ const contour = q('path', carte);
 set0(carte, { clipPath: `circle(0px at ${VAN.x - PAN.x}px ${VAN.y - PAN.y}px)` });
 P.trace = 0;
 const tF = tE + .6;
-tl.to(carte, { clipPath: `circle(2300px at ${VAN.x - PAN.x}px ${VAN.y - PAN.y}px)`, duration: .38, ease: 'power2.in' }, tF);
-tl.to(carte, { clipPath: `circle(4300px at ${VAN.x - PAN.x}px ${VAN.y - PAN.y}px)`, duration: .7, ease: 'power2.out' }, tF + .38);
+tl.to(carte, { clipPath: `circle(1500px at ${VAN.x - PAN.x}px ${VAN.y - PAN.y}px)`, duration: .58, ease: 'power1.in' }, tF);
+tl.to(carte, { clipPath: `circle(4300px at ${VAN.x - PAN.x}px ${VAN.y - PAN.y}px)`, duration: .5, ease: 'power1.out' }, tF + .58);
 tl.to(P, { trace: 1, duration: 1.8, ease: 'power2.inOut' }, tF + .3);
 cue('boom', tF);
 const repli = [brw, df, mf, tel2, codeEl, perf, dep];
@@ -654,7 +684,7 @@ repli.forEach((e) => {
 const comms = D.carte.communes.map((c) => { const wx = VX + c.x * K, wy = VY + c.y * K;
   const cote = { 'Vannes': 'd v', 'Séné': 'b', 'Saint-Avé': 'h', 'Arradon': 'g', 'Plescop': 'g', 'Theix-Noyalo': 'd', 'Auray': 'b', 'Sarzeau': 'b' }[c.nom] || 'b';
   const e = mk(`<div class="commune"><div class="pt"></div><div class="nom ${cote}">${c.nom}</div></div>`); at(e, wx, wy); set0(e, { xPercent: -50, yPercent: -50, autoAlpha: 0, zIndex: 6 });
-  return { ...c, wx, wy, el: e }; });
+  return { ...c, wx, wy, el: e, cote }; });
 const vannes = comms.find((c) => c.nom === 'Vannes');
 const visee = mk(`<div class="visee">${[90, 150, 210].map((r) => `<div class="anneau" style="width:${r}px;height:${r}px"></div>`).join('')}<svg viewBox="0 0 100 100" style="position:absolute;width:260px;height:260px;left:-130px;top:-130px" fill="none" stroke="#fff" stroke-width="1.2" stroke-linecap="round" opacity=".9"><path d="M50 0v26M0 50h26M74 50h26"/></svg></div>`);
 at(visee, vannes.wx, vannes.wy); set0(visee, { autoAlpha: 0, zIndex: 6 });
@@ -687,9 +717,12 @@ camTo(tE + 1.6, T('l2') - tE - 1.9, { x: 4780, y: 35, s: .83, rx: 0 }, 'sine.inO
 // la recherche Google revient : « Votre entreprise » monte en tête
 const SERP = { cx: 3930, cy: 140, s: .8 };
 const tH = T('l2', -.3);
+const SR = { x0: SERP.cx - RECH.w * SERP.s / 2, x1: SERP.cx + RECH.w * SERP.s / 2, y0: SERP.cy - RECH.h * SERP.s / 2, y1: SERP.cy + RECH.h * SERP.s / 2 };
+const sousSERP = comms.filter((c) => c.wy > SR.y0 - 40 && c.wy < SR.y1 + 40 && c.wx > SR.x0 - 40 && (c.wx < SR.x1 + 20 || (c.cote.includes('g') && c.wx < SR.x1 + 240)));
 tl.set(rech, { left: SERP.cx - RECH.w / 2, top: SERP.cy - RECH.h / 2, scale: SERP.s, x: -1300, filter: 'blur(0px)', zIndex: 8 }, tH - .05);
 tl.set(R[2], { top: RT(3) }, tH - .05);
 tl.to(rech, { autoAlpha: 1, x: 0, duration: .8, ease: 'expo.out' }, tH);
+tl.to(sousSERP.map((c) => c.el), { autoAlpha: 0, duration: .22, ease: 'power1.in' }, tH - .02);
 cue('whoosh', tH, .7);
 show(vous, T('l2', .3), { y: 0, s: .95, b: 6, d: .45 });
 tl.to(vous, { top: RT(0), duration: .7, ease: 'power3.inOut' }, T('l2', .7));
@@ -698,14 +731,17 @@ tl.to(R[1], { top: RT(2), duration: .7, ease: 'power3.inOut' }, T('l2', .7));
 cue('montee', T('l2', .7), .5); cue('ding', T('l2', 1.35), .7);
 phrase('l2', 4600, -470, 'Vos clients vous trouvent [[sur Google.]]', { taille: 76, blanc: true });
 camTo(tH, .9, { x: 4600, y: 40, s: .8 });
+camTo(tH + .9, F('l2') - .05 + .2 - tH - .9, { x: 4520, y: 58, s: .845 }, 'sine.inOut');
 
 /* =====================================================================
    ACTE 6 — LES VISITEURS → LES DEMANDES
    ===================================================================== */
 const tI = F('l2') - .05;
 const ROW0 = { x: SERP.cx, y: SERP.cy + (RT(0) + 50 - RECH.h / 2) * SERP.s };
-curClient.montre(tI - .4, 4300, 470);
-curClient.va(tI - .35, ROW0.x + 60, ROW0.y + 8, .55);
+curClient.montre(T('l2', 1.25), 4420, 520);
+curClient.va(T('l2', 1.3), ROW0.x + 330, ROW0.y + 60, .8, 'power2.inOut');
+tl.to(vous, { backgroundColor: '#eef3ff', boxShadow: '0 0 0 2px rgba(8,78,255,.35)', duration: .25 }, T('l2', 1.95));
+curClient.va(tI - .3, ROW0.x + 250, ROW0.y + 10, .45);
 curClient.clic(tI + .25);
 tl.to(vous, { scale: .98, backgroundColor: '#e3ebff', duration: .1, ease: 'power2.in' }, tI + .25); tl.to(vous, { scale: 1, duration: .25, ease: 'back.out(2)' }, tI + .35);
 const TEL3 = { cx: 3930, cy: 150, w: 320, h: 640 };
@@ -714,13 +750,12 @@ set0(tel3, { autoAlpha: 0, zIndex: 9 });
 const ecran3 = q('.ecran', tel3), defile = q('.m-defile', tel3);
 const VR = { x: SERP.cx - (RECH.w / 2 - 40) * SERP.s, y: ROW0.y - 50 * SERP.s, w: (RECH.w - 80) * SERP.s, h: 100 * SERP.s };
 tl.set(tel3, { left: VR.x, top: VR.y, width: VR.w, height: VR.h, borderRadius: 16, autoAlpha: 1 }, tI + .36);
-tl.set(ecran3, { autoAlpha: 0 }, tI + .36);
 tl.fromTo(tel3, { backgroundColor: '#e3ebff' }, { backgroundColor: '#0e2340', duration: .45, ease: 'power2.inOut', immediateRender: false }, tI + .36);
 tl.to(tel3, { left: TEL3.cx - TEL3.w / 2, top: TEL3.cy - TEL3.h / 2, width: TEL3.w, height: TEL3.h, borderRadius: 46, duration: .8, ease: 'power3.inOut' }, tI + .36);
-tl.to(ecran3, { autoAlpha: 1, duration: .35 }, tI + .85);
 tl.set(vous, { autoAlpha: 0 }, tI + .37);
-to(rech, tI + .38, { autoAlpha: 0, filter: 'blur(8px)' }, .4, 'power2.in');
-hide(fiche, tI + .2, { x: 60, y: 0, d: .45 }); to(lien, tI + .2, { autoAlpha: 0 }, .3, 'none');
+to(rech, tI + .38, { autoAlpha: 0, scale: .9, y: 40, filter: 'blur(6px)' }, .26, 'power2.in');
+tl.to(sousSERP.map((c) => c.el), { autoAlpha: 1, duration: .4, ease: 'power1.out' }, tI + .6);
+hide(fiche, tI + .2, { x: 140, y: 0, d: .3 }); to(lien, tI + .2, { autoAlpha: 0 }, .3, 'none');
 cue('whoosh', tI + .36, .6);
 curClient.cache(tI + .7);
 const direct = mk('<div class="badge-direct carte-verre"><i></i>Visiteurs en direct</div>'); at(direct, TEL3.cx, TEL3.cy - TEL3.h / 2 - 40); set0(direct, { xPercent: -50, yPercent: -50, autoAlpha: 0, zIndex: 10 });
@@ -757,12 +792,13 @@ const ROWH = 110, ROWP = 122, ROW_TOP = 76;
 const mails = MAILS.map(([a, n, o, v, h]) => { const m = mk(`<div class="mail" style="left:24px;right:24px;height:${ROWH}px"><span class="nouveau" style="top:49px"></span><span class="av">${a}</span><div><div class="de">${n} · via votre site</div><div class="obj" style="font-size:25px">${o} <em>· ${v}</em></div></div><span class="h">${h}</span></div>`, liste); set0(m, { autoAlpha: 0, top: ROW_TOP }); return m; });
 P.badge = 0;
 const notif = mk(`<div class="notif carte-verre" style="z-index:11"><i>${I.mail()}</i><div><b>Nouvelle demande de devis</b><small>Salle de bain à rénover · Séné</small></div></div>`);
-at(notif, BOX.cx + 110, BOX.cy - BOX.h / 2 - 34); set0(notif, { xPercent: -50, yPercent: -50, autoAlpha: 0 });
+at(notif, BOX.cx + BOX.w / 2 - 175, BOX.cy - BOX.h / 2 - 56); set0(notif, { xPercent: -50, yPercent: -50, autoAlpha: 0 });
 const notifSmall = q('small', notif);
-// la boîte s'ouvre comme une fenêtre (opaque très vite : la carte ne se voit pas au travers)
-tl.fromTo(boite, { autoAlpha: 0, scale: .86, x: -60, filter: 'blur(10px)', transformOrigin: '0% 50%' },
-  { autoAlpha: 1, duration: .16, ease: 'power1.out', immediateRender: true }, T('v2', -.25));
-tl.to(boite, { scale: 1, x: 0, filter: 'blur(0px)', duration: .6, ease: 'expo.out' }, T('v2', -.25));
+// la boîte s'ouvre comme une fenêtre, opaque dès sa première image (la carte ne se voit jamais au travers)
+tl.set(boite, { autoAlpha: 1, clipPath: 'inset(46% 46% 46% 46% round 24px)' }, T('v2', -.25));
+tl.fromTo(boite, { scale: .94, y: 30 }, { scale: 1, y: 0, duration: .6, ease: 'expo.out', immediateRender: false }, T('v2', -.25));
+tl.to(boite, { clipPath: 'inset(0% 0% 0% 0% round 24px)', duration: .42, ease: 'power3.out' }, T('v2', -.25));
+tl.set(boite, { clipPath: 'none' }, T('v2', .2));
 cue('pop', T('v2', -.22), .5);
 phrase('v2', 4400, -390, '…et vous demandent [[un devis.]]', { taille: 80, blanc: true });
 // le visiteur remplit et envoie le formulaire
@@ -770,10 +806,10 @@ tl.to(P, { sc: 4, duration: .35, ease: 'power3.inOut' }, T('v2', -.1));
 curClient.montre(T('v2', .0), TEL3.cx + 120, TEL3.cy + 240);
 const tJ = T('v2', .15);
 const F1 = 'Claire M.', F2 = 'Salle de bain à rénover';
-const f1End = frappe('f1', F1, tJ + .1, 36, .45);
-const f2End = frappe('f2', F2, f1End + .08, 70, .35);
-const tEnvoi = f2End + .07;
-const ENVS = [tEnvoi + .02, tEnvoi + .17, tEnvoi + .32];
+frappe('f1', F1, tJ + .16, 40, .45);
+frappe('f2', F2, tJ + .5, 85, .35);
+const tEnvoi = tJ + .86;
+const ENVS = [tEnvoi + .02, tEnvoi + .22, tEnvoi + .42];
 const envs = ENVS.map(() => { const e = mk(`<div class="enveloppe ico-bleu">${I.mail()}</div>`); set0(e, { autoAlpha: 0, zIndex: 12 }); return e; });
 P.env = ENVS.map(() => 0);
 ENVS.forEach((t0, i) => {
@@ -782,173 +818,275 @@ ENVS.forEach((t0, i) => {
   tl.to(envs[i], { autoAlpha: 0, scale: .5, duration: .12 }, t0 + .46);
   const ta = t0 + .5;
   // les demandes précédentes descendent d'abord, la nouvelle s'insère en tête (aucun chevauchement)
-  mails.forEach((m, k) => { if (k < i) tl.to(m, { top: ROW_TOP + (i - k) * ROWP, duration: .32, ease: 'power3.out' }, ta - .08); });
-  tl.fromTo(mails[i], { autoAlpha: 0, scale: .97, y: -12, top: ROW_TOP, backgroundColor: '#dce5fb' }, { autoAlpha: 1, scale: 1, y: 0, backgroundColor: '#ffffff', duration: .7, ease: 'expo.out', immediateRender: false }, ta + .12);
+  mails.forEach((m, k) => { if (k < i) tl.fromTo(m, { top: ROW_TOP + (i - 1 - k) * ROWP }, { top: ROW_TOP + (i - k) * ROWP, duration: .18, ease: 'power3.out', immediateRender: false }, ta - .06); });
+  tl.fromTo(mails[i], { autoAlpha: 0, scale: .97, y: -12, backgroundColor: '#dce5fb' }, { autoAlpha: 1, scale: 1, y: 0, backgroundColor: '#ffffff', duration: .7, ease: 'expo.out', immediateRender: false }, ta + .1);
   tl.set(P, { badge: i + 1 }, ta + .05);
   cue('envoi', t0, .5); cue('ding', ta, .8);
 });
 tl.fromTo(notif, { autoAlpha: 0, y: -24, filter: 'blur(8px)' }, { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: .45, ease: 'expo.out', immediateRender: false }, ENVS[0] + .5);
-ENVS.slice(1).forEach((t0) => { tl.to(notif, { y: -8, duration: .08 }, t0 + .5); tl.to(notif, { y: 0, duration: .3, ease: 'back.out(2)' }, t0 + .58); });
+ENVS.slice(1).forEach((t0) => tl.fromTo(notif, { scale: 1.06 }, { scale: 1, duration: .18, ease: 'power2.out', immediateRender: false }, t0 + .5));
 P.notifIdx = 0; ENVS.forEach((t0, i) => tl.set(P, { notifIdx: i }, t0 + .51));
 curClient.cache(tEnvoi + .3);
 camTo(tI + .2, 1.0, { x: 4420, y: 70, s: .9 });
-camTo(tI + 1.2, F('v2') - tI - 1.2, { x: 4430, y: 75, s: .915 }, 'sine.inOut');
+camTo(tI + 1.2, F('v2') - .05 - tI - 1.2, { x: 4430, y: 75, s: .915 }, 'sine.inOut');
 // particules : les visiteurs arrivent de partout vers le téléphone
 const SRC = comms.filter((c) => ['Auray', 'Plescop', 'Arradon', 'Saint-Avé', 'Séné', 'Theix-Noyalo'].includes(c.nom)).map((c) => ({ x: c.wx, y: c.wy }));
 const DOTS = [];
 for (let k = 0; k < 44; k++) {
-  const fromTop = k % 3 === 2;
-  const s = fromTop ? { x: 3500 + rnd() * 1900, y: -720 } : SRC[k % SRC.length];
+  const deCote = k % 3 === 2; // venus des bords du cadre, à mi-hauteur (jamais à travers la phrase)
+  const s = deCote ? { x: k % 2 ? 3330 : 5560, y: -240 + rnd() * 300 } : SRC[k % SRC.length];
   const e = mk('<div class="particule"></div>'); e.style.opacity = 0;
   DOTS.push({ el: e, t0: T('v1', -.1) + k * .085 + (rnd() - .5) * .08, d: .9 + rnd() * .4, sx: s.x, sy: s.y,
-    cx: lerp(s.x, TEL3.cx, .5) + (rnd() - .5) * 260, cy: Math.min(s.y, -120) - 220 - rnd() * 240, ex: TEL3.cx + (rnd() - .5) * 140, ey: TEL3.cy - TEL3.h / 2 + 40 + rnd() * 40 });
+    cx: lerp(s.x, TEL3.cx, .5) + (rnd() - .5) * 260, cy: deCote ? s.y - 40 - rnd() * 60 : Math.min(s.y, -120) - 150 - rnd() * 190, ex: TEL3.cx + (rnd() - .5) * 140, ey: TEL3.cy - TEL3.h / 2 + 40 + rnd() * 40 });
 }
 
 /* =====================================================================
    ACTE 7 — LE RÉSULTAT EN CHIFFRES
+   La caméra va de carte en carte ; chaque chiffre se prouve (frise, jauge, parcours).
    ===================================================================== */
+const coche = (c = '#fff', px = 18, w = 3) => petit(I.coche(c, w), px);
 const CH = [
-  { cx: 3950, ico: I.calendrier(), gros: '30<small>jours</small>', lib: 'Mise en ligne', note: 'à partir de, après validation de la maquette' },
-  { cx: 4450, ico: I.jauge(), gros: '<span class="c100">0</span><small>/100</small>', lib: 'Vitesse', note: 'Lighthouse mobile · optikom.fr · sept. 2026' },
-  { cx: 4950, ico: I.personne(), gros: '1', lib: 'Interlocuteur', note: 'le même, du devis au suivi' },
+  { cx: 3850, ico: I.calendrier(), apd: 'à partir de', gros: '30<small>jours</small>', lib: 'Mise en ligne', note: 'après validation de la maquette',
+    preuve: '<div class="preuve frise"><div class="rail"><i class="rempli"></i><b class="n0"></b><b class="n1"></b></div><div class="frise-l"><span>Maquette validée</span><span>En ligne</span></div></div>' },
+  { cx: 4450, ico: '', apd: '', gros: '<span class="c100">0</span><small>/100</small>', lib: 'Vitesse', note: 'Lighthouse mobile · optikom.fr · sept. 2026',
+    preuve: `<svg class="anneau-lh" viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" stroke="rgba(255,255,255,.22)" stroke-width="7" fill="none"/><circle class="arc-lh" cx="60" cy="60" r="50" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" transform="rotate(-90 60 60)" stroke-dasharray="314.16" stroke-dashoffset="314.16"/><g class="lh-ico" transform="translate(42 42) scale(1.5)" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round">${I.jauge().replace(/<\/?svg[^>]*>/g, '')}</g><g class="lh-ok" transform="translate(39 39) scale(1.75)" opacity="0" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${I.coche('#fff', 3).replace(/<\/?svg[^>]*>/g, '')}</g></svg>` },
+  { cx: 5050, ico: I.personne(), apd: '', gros: '1', lib: 'Interlocuteur', note: 'le même, du devis au suivi',
+    preuve: `<div class="preuve etapes"><div class="rail"><i class="rempli"></i></div>${['Devis', 'Maquette', 'Site', 'Suivi'].map((e) => `<div class="etape"><b></b><span>${e}</span></div>`).join('')}<span class="av-int">${I.personne('#084eff')}</span></div>` },
 ];
-const CHY = 2030, CHW = 460, CHH = 520;
-const chiffres = CH.map((c) => { const e = box(mk(`<div class="carte carte-bleue chiffre" style="border:none;box-shadow:var(--shadow-accent-lg);padding:36px 36px"><div class="trame-bleue"></div><span class="ico">${c.ico}</span><div class="gros tnum" style="margin-top:46px">${c.gros}</div><div class="lib">${c.lib}</div><div class="note" style="font-size:20px">${c.note}</div></div>`), c.cx, CHY, CHW, CHH);
+const CHY = 2030, CHW = 520, CHH = 600;
+const chiffres = CH.map((c) => { const e = box(mk(`<div class="carte carte-bleue chiffre" style="border:none;box-shadow:var(--shadow-accent-lg)"><div class="trame-bleue"></div>${c.ico ? `<span class="ico">${c.ico}</span>` : '<div style="height:64px"></div>'}<div class="apd">${c.apd || '&nbsp;'}</div><div class="gros tnum">${c.gros}</div><div class="lib">${c.lib}</div><div class="note">${c.note}</div>${c.preuve}</div>`), c.cx, CHY, CHW, CHH);
   set0(e, { autoAlpha: 0, zIndex: 13 }); return e; });
-const c100 = q('.c100', chiffres[1]);
-P.n100 = 0;
+const c100 = q('.c100', chiffres[1]), arcLH = q('.arc-lh', chiffres[1]);
+P.n100 = 0; P.lh = 0;
 const tK = F('v2') - .05;
-camTo(tK, 1.0, { x: 4450, y: 1960, s: 1.0 });
-camTo(tK + 1.0, F('c3') - tK - 1.0, { x: 4450, y: 1966, s: 1.012 }, 'sine.inOut');
-cue('whoosh', tK, 1);
+// caméra : carte 1 → carte 2 → carte 3 (chaque carte ≈ 2/3 de la hauteur du cadre)
+const CAMY = 1978, CAMS = 1.13;
+camTo(tK, 1.05, { x: CH[0].cx, y: CAMY, s: CAMS });
+camTo(tK + 1.05, T('c2', -.4) - tK - 1.05, { x: CH[0].cx + 14, y: CAMY + 4, s: CAMS + .025 }, 'sine.inOut');
+camTo(T('c2', -.4), .75, { x: CH[1].cx, y: CAMY, s: CAMS }, 'power3.inOut');
+camTo(T('c2', .35), T('c3', -.4) - T('c2', .35), { x: CH[1].cx + 14, y: CAMY + 4, s: CAMS + .025 }, 'sine.inOut');
+camTo(T('c3', -.4), .75, { x: CH[2].cx, y: CAMY, s: CAMS }, 'power3.inOut');
+const tL = F('c3'); // la caméra part quand la phrase c3 est finie
+camTo(T('c3', .35), tL - T('c3', .35), { x: CH[2].cx - 14, y: CAMY + 4, s: CAMS + .025 }, 'sine.inOut');
+cue('whoosh', tK, 1); cue('whoosh', T('c2', -.4), .5); cue('whoosh', T('c3', -.4), .5);
+// les trois demandes deviennent les trois cartes
 [0, 1, 2].forEach((i) => {
   const c = chiffres[i], t0 = tK + i * .06;
-  const parts = qa('.ico, .gros, .lib, .note', c); parts.forEach((e) => set0(e, { autoAlpha: 0 }));
+  const parts = qa('.ico, .apd, .gros, .lib, .note, .preuve, .anneau-lh', c); parts.forEach((e) => set0(e, { autoAlpha: 0 }));
   const rx = BOX.cx - BOX.w / 2 + 220 + 24, ry = BOX.cy - BOX.h / 2 + ROW_TOP + (2 - i) * ROWP;
   const eti = mk(`<div style="position:absolute;left:24px;top:24px;font-size:22px;font-weight:600;color:#fff;white-space:nowrap">${MAILS[i][2]} · ${MAILS[i][3]}</div>`, c);
   tl.to(eti, { autoAlpha: 0, y: -8, duration: .25, ease: 'power2.in' }, t0 + .5);
   tl.set(c, { left: rx, top: ry, width: BOX.w - 220 - 48, height: ROWH, borderRadius: 16 }, t0);
   // la ligne devient carte bleue d'un coup (sélection), puis s'envole
-  tl.fromTo(c, { autoAlpha: 0 }, { autoAlpha: 1, duration: .07, ease: 'none', immediateRender: false }, t0);
-  tl.set(mails[i], { autoAlpha: 0 }, t0 + .07);
+  tl.fromTo(c, { autoAlpha: 0 }, { autoAlpha: 1, duration: .03, ease: 'none', immediateRender: false }, t0);
+  tl.set(mails[i], { display: 'none' }, t0 + .03);
   tl.to(c, { left: CH[i].cx - CHW / 2, top: CHY - CHH / 2, width: CHW, height: CHH, borderRadius: 24, duration: .95, ease: 'power2.inOut' }, t0);
-  parts.forEach((e, k) => { if (!e.classList.contains('gros')) show(e, t0 + .65 + k * .06, { y: 20, b: 6, d: .7 }); });
+  parts.forEach((e, k) => { if (!e.classList.contains('gros')) show(e, t0 + .65 + k * .05, { y: 20, b: 6, d: .7 }); });
 });
-to([boite, notif, tel3, direct], tK + .12, { autoAlpha: 0, filter: 'blur(10px)', scale: .96 }, .32, 'power2.in');
 ['c1', 'c2', 'c3'].forEach((id, i) => { show(q('.gros', chiffres[i]), T(id, .1), { y: 30, s: .85, b: 14, d: .9 }); cue('pop', T(id, .12), .7); });
-tl.to(P, { n100: 100, duration: .85, ease: 'power2.out' }, T('c2', .15));
-for (let i = 0; i < 12; i++) cue('tick', T('c2', .15 + i * .065), .35);
-const focusCarte = (i, t) => chiffres.forEach((c, k) => tl.to(c, { scale: k === i ? 1.05 : .96, y: k === i ? -14 : 0, duration: .7, ease: 'power3.inOut' }, t));
-focusCarte(0, T('c1')); focusCarte(1, T('c2')); focusCarte(2, T('c3'));
-phrase('c1', 4450, 1560, 'En ligne à partir de [[30 jours.]]', { taille: 80 });
-phrase('c2', 4450, 1560, 'Construit comme le nôtre : [[100/100]] en vitesse.', { taille: 76, fit: 1800 });
-phrase('c3', 4450, 1560, 'Un seul interlocuteur, [[du devis au suivi.]]', { taille: 80, fit: 1800 });
+chiffres.forEach((c) => set0(c, { filter: 'blur(0px)' }));
+const focusCarte = (i, t) => chiffres.forEach((c, k) => tl.to(c, { scale: k === i ? 1.04 : .95, autoAlpha: k === i ? 1 : .5, filter: k === i ? 'blur(0px)' : 'blur(6px)', duration: .7, ease: 'power3.inOut' }, t));
+focusCarte(0, T('c1', -.3)); focusCarte(1, T('c2', -.4)); focusCarte(2, T('c3', -.4));
+// preuve 1 : la frise « maquette validée → en ligne » se remplit
+const fr = q('.frise', chiffres[0]);
+tl.fromTo(q('.rempli', fr), { scaleX: 0 }, { scaleX: 1, duration: 1.3, ease: 'power2.inOut', immediateRender: false }, T('c1', .45));
+tl.to(q('.n1', fr), { backgroundColor: '#ffffff', scale: 1.3, duration: .22, ease: 'back.out(3)' }, T('c1', 1.72));
+tl.to(q('.n1', fr), { scale: 1, duration: .35, ease: 'power2.out' }, T('c1', 1.94));
+cue('valide', T('c1', 1.72), .45);
+// preuve 2 : la jauge balaie le cercle avec le compteur, coche à 100
+tl.to(P, { n100: 100, lh: 1, duration: 1.15, ease: 'power2.out' }, T('c2', .15));
+for (let i = 0; i < 14; i++) cue('tick', T('c2', .15 + i * .07), .3);
+tl.to(q('.lh-ico', chiffres[1]), { opacity: 0, duration: .15 }, T('c2', 1.25));
+tl.fromTo(q('.lh-ok', chiffres[1]), { opacity: 0, scale: .4, transformOrigin: '50% 50%' }, { opacity: 1, scale: 1, duration: .4, ease: 'back.out(3)', immediateRender: false }, T('c2', 1.3));
+cue('valide', T('c2', 1.3), .45);
+// preuve 3 : le même interlocuteur suit chaque étape
+const et = q('.etapes', chiffres[2]), noeuds = qa('.etape b', et), avInt = q('.av-int', et), railE = q('.rempli', et);
+const XE = [0, 138, 276, 414];
+set0(avInt, { x: 0 }); set0(railE, { scaleX: 0 });
+tl.to(noeuds[0], { backgroundColor: '#ffffff', duration: .2 }, T('c3', .35));
+XE.slice(1).forEach((x, k) => {
+  const t = T('c3', .5 + k * .42);
+  tl.to(avInt, { x, duration: .38, ease: 'power3.inOut' }, t);
+  tl.to(railE, { scaleX: (k + 1) / 3, duration: .38, ease: 'power3.inOut' }, t);
+  tl.to(noeuds[k + 1], { backgroundColor: '#ffffff', scale: 1.25, duration: .18, ease: 'power2.out' }, t + .32);
+  tl.to(noeuds[k + 1], { scale: 1, duration: .3, ease: 'power2.out' }, t + .5);
+  cue('tick', t + .32, .5);
+});
+phrase('c1', CH[0].cx, 1655, 'En ligne à partir de [[30 jours.]]', { taille: 62, fit: 1350 });
+phrase('c2', CH[1].cx, 1655, 'Construit comme le nôtre : [[100/100]] en vitesse.', { taille: 62, fit: 1350 });
+phrase('c3', CH[2].cx, 1655, 'Un seul interlocuteur, [[du devis au suivi.]]', { taille: 62, fit: 1350 });
 
 /* =====================================================================
-   ACTE 8 — LA GARANTIE
+   ACTE 8 — LA GARANTIE (la pile de cartes s'ouvre en carte « garantie »)
    ===================================================================== */
-const GAR = { cx: 4450, cy: 3050, w: 1240, h: 470 };
+const GAR = { cx: 4450, cy: 3050, w: 1240, h: 560 }; // même hauteur que les cartes de prix (partage net)
 const sceau = `<svg viewBox="0 0 210 210" width="230" height="230" fill="none"><circle cx="105" cy="105" r="100" stroke="#084eff" stroke-opacity=".18" stroke-width="2"/><circle class="sc-arc" cx="105" cy="105" r="86" stroke="#084eff" stroke-width="3" stroke-dasharray="540.4" stroke-dashoffset="540.4" transform="rotate(-90 105 105)" stroke-linecap="round"/><circle cx="105" cy="105" r="64" fill="url(#gS)"/><defs><linearGradient id="gS" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#1d5cff"/><stop offset="1" stop-color="#063cc8"/></linearGradient></defs><path d="M105 0v26M105 184v26M0 105h26M184 105h26" stroke="#084eff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/><g transform="translate(75 75) scale(2.5)" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${I.bouclier().replace(/<\/?svg[^>]*>/g, '')}</g></svg>`;
-const gar = box(mk(`<div class="carte carte-verre garantie"><div class="sceau" style="width:230px;height:230px">${sceau}</div><div><h3>Notre garantie</h3><div class="vide">[À COMPLÉTER]</div></div></div>`), GAR.cx, GAR.cy, GAR.w, GAR.h);
+const gar = box(mk(`<div class="carte garantie" style="background:#fff"><div class="sceau" style="width:230px;height:230px">${sceau}</div><div><h3>Notre garantie</h3><div class="vide">[À COMPLÉTER]<span class="caret"></span></div></div><div class="zone-reflet"><i></i></div></div>`), GAR.cx, GAR.cy, GAR.w, GAR.h);
 set0(gar, { autoAlpha: 0, zIndex: 13 });
-const garArc = q('.sc-arc', gar);
+const garArc = q('.sc-arc', gar), garCaret = q('.vide .caret', gar);
 P.arc = 0;
-const tL = F('c3') - .25;
-camTo(tL, .95, { x: 4450, y: 3050, s: 1.0 });
-camTo(tL + .95, F('g1') - tL - .95, { x: 4450, y: 3050, s: 1.025 }, 'sine.inOut');
+const tM = F('g1') - .1;
+camTo(tL, .9, { x: 4450, y: 3050, s: 1.0 });
+camTo(tL + .9, tM - tL - .9, { x: 4450, y: 3038, s: 1.07 }, 'sine.inOut'); // poussée lente pendant la garantie
 cue('whoosh', tL, .8);
-chiffres.forEach((c, i) => { tl.to(qa('.ico, .gros, .lib, .note', c), { autoAlpha: 0, duration: .25, ease: 'power2.in' }, tL - .1);
-  tl.to(c, { left: GAR.cx - CHW / 2, top: GAR.cy - CHH / 2, rotation: (i - 1) * 4, scale: .82, duration: .85, ease: 'power3.inOut' }, tL + (2 - i) * .05);
-  tl.to(c, { autoAlpha: 0, duration: .3, ease: 'none' }, tL + .75); });
-tl.fromTo(gar, { autoAlpha: 0, scale: .55, rotation: -3 }, { autoAlpha: 1, scale: 1, rotation: 0, duration: .9, ease: 'expo.out', immediateRender: false }, tL + .6);
+// la phrase c3 est finie : les deux cartes estompées se vident (0,25 s), « 1 interlocuteur » reste sur la carte du dessus
+const CONTENU = '.ico, .apd, .gros, .lib, .note, .preuve, .anneau-lh';
+chiffres.forEach((c, i) => {
+  if (i < 2) tl.to(qa(CONTENU, c), { autoAlpha: 0, duration: .25, ease: 'power2.in' }, tL);
+  tl.to(c, { autoAlpha: 1, filter: 'blur(0px)', duration: .14, ease: 'power1.out' }, tL);
+  tl.to(c, { left: GAR.cx - CHW / 2, top: GAR.cy - CHH / 2, rotation: (i - 1) * 4, scale: .82, duration: .72, ease: 'power3.inOut' }, tL + (2 - i) * .04);
+});
+// la carte du dessus s'ouvre : la garantie (blanche, opaque) épouse son rectangle à chaque image
+const tG0 = tL + .74;
+tl.set([chiffres[0], chiffres[1]], { autoAlpha: 0 }, tG0 + .02);
+tl.set(gar, { left: GAR.cx - CHW / 2, top: GAR.cy - CHH / 2, width: CHW, height: CHH, rotation: 4, scale: .82 }, tG0 - .01);
+tl.to([chiffres[2], gar], { left: GAR.cx - GAR.w / 2, top: GAR.cy - GAR.h / 2, width: GAR.w, height: GAR.h, rotation: 0, scale: 1, duration: .8, ease: 'expo.out' }, tG0);
+tl.to(qa(CONTENU, chiffres[2]), { autoAlpha: 0, duration: .15, ease: 'power1.in' }, tG0);
+tl.fromTo(gar, { autoAlpha: 0 }, { autoAlpha: 1, duration: .28, ease: 'power1.inOut', immediateRender: false }, tG0 + .04);
+tl.set(chiffres[2], { autoAlpha: 0 }, tG0 + .34);
+cue('pop', tG0, .5);
 const garParts = qa('.sceau, h3, .vide', gar); set0(garParts, { autoAlpha: 0 });
-garParts.forEach((e, k) => show(e, T('g1', k * .12), { y: 18, b: 8, d: .7, ir: false }));
-tl.to(P, { arc: 1, duration: 1.1, ease: 'power2.inOut' }, T('g1', .1));
-cue('valide', T('g1', .15), .6);
+const tG1 = Math.max(T('g1'), tG0 + .2); // le texte arrive quand la carte est ouverte
+garParts.forEach((e, k) => show(e, tG1 + k * .12, { y: 18, b: 8, d: .7, ir: false }));
+tl.to(P, { arc: 1, duration: 1.1, ease: 'power2.inOut' }, tG1 + .1);
+cue('valide', tG1 + .15, .6);
+const refletG = q('.zone-reflet i', gar);
+tl.fromTo(refletG, { x: -400 }, { x: 1700, duration: 1.1, ease: 'power2.inOut', immediateRender: false }, T('g1', 1.9));
+cue('brillance', T('g1', 1.9), .35);
 
 /* =====================================================================
-   ACTE 9 — LES PRIX
+   ACTE 9 — LES PRIX (la carte dont on parle s'avance, ses points se cochent)
    ===================================================================== */
 const PX = [{ cx: 4110, cls: 'bleu carte-bleue', ico: I.web('#fff'), h: 'Création de votre site', m: '1 100 €', s: '', li: ['Maquette sur mesure', 'Pensé pour le téléphone', 'Prêt pour Google'] },
             { cx: 4790, cls: 'blanc', ico: I.epingle('#fff'), h: 'Référencement local', m: '250 €', s: '/mois', li: ['Fiche Google complète', 'Vannes et le Golfe', 'Suivi chaque mois'] }];
 const PY = 4180, PW = 620, PH = 560;
-const prix = PX.map((p) => { const e = box(mk(`<div class="carte prix ${p.cls}" style="padding:40px 44px;${p.cls.includes('bleu') ? 'border:none;box-shadow:var(--shadow-accent-lg)' : ''}">${p.cls.includes('bleu') ? '<div class="trame-bleue"></div>' : ''}<span class="ico ${p.cls.includes('bleu') ? '' : 'ico-bleu'}">${p.ico}</span><h3 style="margin-top:24px">${p.h}</h3><div class="apd" style="margin-top:18px">à partir de</div><div class="montant">${typo(p.m)}<small>${p.s}</small></div><ul style="margin-top:22px">${p.li.map((l) => `<li><i>${I.coche(p.cls.includes('bleu') ? '#fff' : '#084eff', 3)}</i>${l}</li>`).join('')}</ul><div class="tva" style="bottom:26px">TVA non applicable, art. 293 B du CGI</div></div>`), p.cx, PY, PW, PH);
+const LIBS = ['Audit gratuit sous 48 h', 'Devis sous 24 h']; // ce que deviendront les cartes (acte 10)
+const prix = PX.map((p, i) => { const e = box(mk(`<div class="carte prix ${p.cls}" style="padding:40px 44px;${p.cls.includes('bleu') ? 'border:none;box-shadow:var(--shadow-accent-lg)' : ''}">${p.cls.includes('bleu') ? '<div class="trame-bleue"></div>' : ''}<div class="lib-pil" style="color:${i ? 'var(--accent-strong)' : '#fff'}"><span class="pt"></span>${LIBS[i]}<span class="fl">${I.fleche}</span></div><div class="zone-reflet"><i></i></div><span class="ico ${p.cls.includes('bleu') ? '' : 'ico-bleu'}">${p.ico}</span><h3 style="margin-top:24px">${p.h}</h3><div class="apd" style="margin-top:18px">à partir de</div><div class="montant">${typo(p.m)}<small>${p.s}</small></div><ul style="margin-top:22px">${p.li.map((l) => `<li><i>${I.coche(p.cls.includes('bleu') ? '#fff' : '#084eff', 3)}</i>${l}</li>`).join('')}</ul><div class="tva" style="bottom:26px">TVA non applicable, art. 293 B du CGI</div></div>`), p.cx, PY, PW, PH);
   set0(e, { autoAlpha: 0, zIndex: 13 }); return e; });
-const tM = F('g1') - .1;
-camTo(tM, .95, { x: 4450, y: 4110, s: 1.0 });
-camTo(tM + .95, F('x2') - tM - .95, { x: 4450, y: 4114, s: 1.015 }, 'sine.inOut');
-cue('whoosh', tM, .8);
-tl.to(garParts, { autoAlpha: 0, filter: 'blur(6px)', duration: .2, ease: 'power2.in' }, tM + .45);
-tl.to(gar, { top: PY - GAR.h / 2, duration: .7, ease: 'power2.inOut' }, tM);
-tl.to(gar, { autoAlpha: 0, duration: .25, ease: 'none' }, tM + .7);
+const tN = F('x2') - .1;
+// la garantie descend avec la caméra (toujours au centre du cadre), puis se partage en deux cartes de prix
+camTo(tM, .75, { x: 4450, y: 4110, s: 1.04 });
+camTo(T('x1', .1), .7, { x: 4330, y: 4108, s: 1.06 }, 'power3.inOut');
+camTo(T('x1', .8), T('x2', -.1) - T('x1', .8), { x: 4318, y: 4110, s: 1.08 }, 'sine.inOut');
+camTo(T('x2', -.1), .8, { x: 4590, y: 4106, s: 1.07 }, 'power3.inOut');
+camTo(T('x2', .7), tN - .15 - T('x2', .7), { x: 4615, y: 4114, s: 1.11 }, 'sine.inOut'); // poussée lente une fois les points cochés
+cue('whoosh', tM, .8); cue('whoosh', T('x2', -.1), .45);
+tl.to(gar, { top: PY - GAR.h / 2, duration: .75, ease: 'power2.inOut' }, tM);
+tl.to(garParts, { autoAlpha: 0, filter: 'blur(6px)', duration: .18, ease: 'power2.in' }, tM + .55);
+const tS2 = tM + .76; // partage : la moitié droite est déjà la carte blanche, la gauche se remplit de bleu (opaque)
+tl.set(prix[1], { left: GAR.cx, top: PY - PH / 2, autoAlpha: 1 }, tS2);
+tl.set(prix[0], { left: GAR.cx - PW, top: PY - PH / 2, autoAlpha: 1, clipPath: 'inset(0% 100% 0% 0% round 24px)' }, tS2);
+tl.to(prix[0], { clipPath: 'inset(0% 0% 0% 0% round 24px)', duration: .26, ease: 'power2.inOut' }, tS2);
+tl.set(prix[0], { clipPath: 'none' }, tS2 + .27);
+tl.set(gar, { autoAlpha: 0 }, tS2 + .27);
+PX.forEach((p, i) => tl.to(prix[i], { left: p.cx - PW / 2, duration: .5, ease: 'power3.out' }, tS2 + .24));
+cue('pop', tS2, .5);
 PX.forEach((p, i) => {
-  const c = prix[i], t0 = tM + .65 + i * .06;
+  const c = prix[i];
   const parts = qa('.ico, h3, .apd, .montant, ul, .tva', c); parts.forEach((e) => set0(e, { autoAlpha: 0 }));
-  tl.set(c, { left: GAR.cx - GAR.w / 2 + (i ? GAR.w / 2 : 0), top: PY - GAR.h / 2, width: GAR.w / 2, height: GAR.h }, t0);
-  tl.fromTo(c, { autoAlpha: 0 }, { autoAlpha: 1, duration: .25, ease: 'power1.inOut', immediateRender: false }, t0);
-  tl.to(c, { left: p.cx - PW / 2, top: PY - PH / 2, width: PW, height: PH, duration: .8, ease: 'power3.inOut' }, t0);
-  parts.forEach((e, k) => show(e, t0 + .2 + k * .06, { y: 20, b: 8, d: .7 }));
+  parts.forEach((e, k) => show(e, T('x1', i * .12) + k * .04, { y: 20, b: 8, d: .6 }));
+  // les points se cochent un à un quand on parle de cette carte
+  const ics = qa('li i', c); set0(ics, { scale: 0 });
+  ics.forEach((e, k) => { const t = T(i ? 'x2' : 'x1', .75 + k * .22); tl.to(e, { scale: 1, duration: .35, ease: 'back.out(3)' }, t); cue('tick', t, .45); });
 });
-const focusPrix = (i, t) => prix.forEach((c, k) => tl.to(c, { scale: k === i ? 1.04 : .97, y: k === i ? -14 : 0, duration: .7, ease: 'power3.inOut' }, t));
-focusPrix(0, T('x1')); focusPrix(1, T('x2'));
+const focusPrix = (i, t) => prix.forEach((c, k) => tl.to(c, { scale: k === i ? 1.05 : .95, autoAlpha: k === i ? 1 : .6, duration: .7, ease: 'power3.inOut' }, t));
+focusPrix(0, T('x1', .02)); focusPrix(1, T('x2', -.05));
+// reflet sur la carte dont on parle
+[[0, T('x1', 1.7)], [1, T('x2', 2.3)]].forEach(([i, t]) => { tl.fromTo(q('.zone-reflet i', prix[i]), { x: -300 }, { x: 900, duration: 1.0, ease: 'power2.inOut', immediateRender: false }, t); cue('brillance', t, .25); });
 phrase('x1', 4450, 3720, 'Votre site à partir de [[1 100 €.]]', { taille: 80 });
 phrase('x2', 4450, 3720, 'Référencement local [[dès 250 €/mois.]]', { taille: 80 });
 cue('pop', T('x1', .2), .5); cue('pop', T('x2', .2), .5);
 
 /* =====================================================================
    ACTE 10 — APPEL À L'ACTION
+   Les cartes de prix deviennent deux grands boutons ; « Vous » clique ;
+   les boutons se rangent, optikom.fr se tape, le logo fait sa mise au point.
    ===================================================================== */
-const CTA = { cx: 4450, cy: 5300, w: 1700, h: 880 };
+const CTA = { cx: 4450, cy: PY, w: 1700, h: 880 }; // sur place : les cartes de prix deviennent les boutons sans quitter le cadre
 const cta = box(mk(`<div class="carte cta" style="border:none"><div class="fond-cta"><div class="h1" style="left:-200px;top:-300px;width:1100px;height:900px"></div><div class="h2" style="right:-300px;bottom:-400px;width:1200px;height:1000px"></div></div></div>`), CTA.cx, CTA.cy, CTA.w, CTA.h);
 set0(cta, { autoAlpha: 0, zIndex: 12 });
 const cx0 = CTA.cx - CTA.w / 2, cy0 = CTA.cy - CTA.h / 2;
-const pil1 = mk(`<div class="btn btn-primaire cta-pilule" style="z-index:14"><span class="pt"></span>Audit gratuit sous 48 h${I.fleche}</div>`); at(pil1, CTA.cx - 345, cy0 + 150);
-const pil2 = mk(`<div class="btn btn-inverse cta-pilule" style="z-index:14"><span class="pt"></span>Devis sous 24 h${I.fleche}</div>`); at(pil2, CTA.cx + 375, cy0 + 150);
+const PIL = [{ x: CTA.cx, y: CTA.cy - 110, w: 1010, h: 156 }, { x: CTA.cx, y: CTA.cy + 96, w: 720, h: 156 }];
+const PILF = [{ x: CTA.cx - 345, y: cy0 + 150 }, { x: CTA.cx + 375, y: cy0 + 150 }], PS = .62; // place finale, plus petits
+const pilHTML = (cls, txt, w, h) => `<div class="btn ${cls} cta-pilule" style="z-index:14;font-size:64px;width:${w}px;height:${h}px;padding:0;justify-content:center;gap:26px"><span class="pt"></span>${txt}<span class="fl">${I.fleche}</span><span class="ok" style="display:none">${petit(I.coche('currentColor', 3), 54)}</span></div>`;
+const pil1 = mk(pilHTML('btn-primaire', 'Audit gratuit sous 48 h', PIL[0].w, PIL[0].h)); at(pil1, PIL[0].x, PIL[0].y);
+const pil2 = mk(pilHTML('btn-inverse', 'Devis sous 24 h', PIL[1].w, PIL[1].h)); at(pil2, PIL[1].x, PIL[1].y);
 const logo = mk('<img class="cta-logo" src="assets/logo-blanc.svg" style="width:600px;z-index:14">'); at(logo, CTA.cx, cy0 + 360);
-const urlB = mk(`<div class="url-barre" style="z-index:14">${I.cadenas('#9db8ff')}<span class="u-t"></span><span class="caret"></span></div>`); at(urlB, CTA.cx, cy0 + 575);
+const urlB = mk(`<div class="url-barre" style="z-index:14;overflow:hidden">${I.cadenas('#9db8ff')}<span class="u-t"></span><span class="caret"></span><i class="reflet-url"></i></div>`); at(urlB, CTA.cx, cy0 + 575);
 const lieu = mk(`<div class="cta-lieu" style="z-index:14">${petit(I.epingle('#aebbd0'), 22, 'vertical-align:-3px;margin-right:8px')}Agence web à Vannes · Golfe du Morbihan<span style="opacity:.45;margin:0 14px">|</span>${petit(I.tel('#aebbd0'), 22, 'vertical-align:-3px;margin-right:8px')}06 33 46 79 83</div>`); at(lieu, CTA.cx, cy0 + 745);
-[pil1, pil2, logo, urlB, lieu].forEach((e) => set0(e, { xPercent: -50, yPercent: -50, autoAlpha: 0 }));
+const envoye = mk(`<div class="puce-ok carte-verre"><b>${coche('#fff', 18)}</b>Demande envoyée</div>`); at(envoye, PIL[0].x + PIL[0].w / 2 - 120, PIL[0].y - PIL[0].h / 2 - 46);
+[pil1, pil2, logo, urlB, lieu, envoye].forEach((e) => set0(e, { xPercent: -50, yPercent: -50, autoAlpha: 0 }));
 const urlT2 = q('.u-t', urlB), urlCaret = q('.caret', urlB);
 const sph = [[cx0 + 40, cy0 + 120, 150], [cx0 + CTA.w - 90, cy0 + CTA.h - 150, 210], [cx0 + 260, cy0 + CTA.h - 20, 90]].map(([x, y, r]) => { const s = box(mk('<div class="sphere" style="z-index:15"></div>'), x, y, r, r); set0(s, { autoAlpha: 0 }); return s; });
 const anneauCTA = box(mk(`<div class="anneau-optique" style="width:300px;height:300px;z-index:13">${I.vise('rgba(255,255,255,.4)')}</div>`), cx0 + 150, cy0 + 560, 300, 300); set0(anneauCTA, { autoAlpha: 0 });
-const tN = F('x2') - .1;
-camTo(tN, 1.0, { x: 4450, y: 5300, s: .98 });
-camTo(tN + 1.0, DUREE - tN - 1.0, { x: 4450, y: 5306, s: 1.05 }, 'sine.inOut');
-cue('whoosh', tN, .9);
+camTo(tN - .15, 1.0, { x: 4450, y: PY, s: .98 });
+camTo(tN + .85, F('k1', -.6) - tN - .85, { x: 4450, y: PY - 4, s: 1.0 }, 'sine.inOut');
+camTo(F('k1', -.6), DUREE - F('k1', -.6), { x: 4450, y: PY + 10, s: 1.075 }, 'sine.inOut'); // poussée finale
+cue('whoosh', tN, .6);
+// les cartes de prix se rétractent sur place en boutons : « 1 100 € » devient « Audit gratuit sous 48 h »,
+// « 250 €/mois » devient « Devis sous 24 h » (fondu des libellés pendant le mouvement)
 PX.forEach((p, i) => {
-  const c = prix[i], tgt = i ? pil2 : pil1, pw = i ? 470 : 610, ph = 116;
-  tl.to(qa('.ico, .apd, ul, .tva', c), { autoAlpha: 0, duration: .15, ease: 'power2.in' }, tN - .25);
-  tl.to(c, { left: parseFloat(tgt.style.left) - pw / 2, top: parseFloat(tgt.style.top) - ph / 2, width: pw, height: ph, borderRadius: 60, duration: 1.0, ease: 'power2.inOut' }, tN - .1 + i * .05);
-  tl.to(qa('h3, .montant, .trame-bleue', c), { autoAlpha: 0, duration: .2, ease: 'power2.in' }, tN + .4);
-  tl.to(c, { autoAlpha: 0, duration: .2, ease: 'none' }, T('k1', -.05) + i * .05);
+  const c = prix[i], g = PIL[i], lib = q('.lib-pil', c);
+  if (!i) tl.set(c, { zIndex: 14 }, tN - .15);
+  tl.to(qa('.ico, .apd, ul, .tva, h3, .montant, .trame-bleue', c), { autoAlpha: 0, duration: .22, ease: 'power2.in' }, tN - .15);
+  tl.to(c, { autoAlpha: 1, duration: .2, ease: 'power1.out' }, tN - .15); // la carte estompée redevient pleine tout de suite
+  tl.to(c, { left: g.x - g.w / 2, top: g.y - g.h / 2, width: g.w, height: g.h, borderRadius: g.h / 2, scale: 1, duration: .8, ease: 'power3.inOut' }, tN - .1 + i * .05);
+  tl.fromTo(lib, { autoAlpha: 0, filter: 'blur(6px)' }, { autoAlpha: 1, filter: 'blur(0px)', duration: .3, ease: 'power1.out', immediateRender: false }, tN - .08 + i * .05);
+  tl.set(i ? pil2 : pil1, { autoAlpha: 1 }, tN + .71 + i * .05);
+  tl.set(c, { autoAlpha: 0 }, tN + .72 + i * .05);
 });
-tl.fromTo(cta, { autoAlpha: 0, scale: .92 }, { autoAlpha: 1, scale: 1, duration: 1.1, ease: 'power3.out', immediateRender: false }, tN + .35);
-tl.to(pil1, { autoAlpha: 1, duration: .2 }, T('k1', -.05));
-tl.to(pil2, { autoAlpha: .45, scale: .96, duration: .2 }, T('k1', 0));
-tl.to(pil2, { autoAlpha: 1, scale: 1, duration: .7, ease: 'back.out(2)' }, T('k1', 2.75));
-cue('pop', T('k1', 2.78), .6);
+// le panneau bleu nuit s'ouvre depuis le centre des boutons (opaque à chaque image)
+tl.set(cta, { autoAlpha: 1, clipPath: 'circle(0% at 50% 50%)' }, tN + .45);
+tl.to(cta, { clipPath: 'circle(75% at 50% 50%)', duration: .85, ease: 'power2.inOut' }, tN + .45);
+tl.set(cta, { clipPath: 'none' }, tN + 1.32);
 sph.forEach((s, i) => show(s, T('k1', .2 + i * .15), { s: .7, y: 30, b: 16, d: 1.3 }));
 show(anneauCTA, T('k1', .5), { s: .7, y: 0, b: 14, d: 1.3 });
-curVous.montre(T('k1', .5), CTA.cx + 300, CTA.cy + 330);
-curVous.va(T('k1', .55), CTA.cx - 260, cy0 + 168, .7);
-curVous.clic(T('k1', 1.35));
-tl.to(pil1, { scale: .95, duration: .07 }, T('k1', 1.35)); tl.to(pil1, { scale: 1.04, duration: .3, ease: 'back.out(2.5)' }, T('k1', 1.42)); tl.to(pil1, { scale: 1, duration: .6 }, T('k1', 2.2));
-curVous.va(T('k1', 2.6), CTA.cx + 440, cy0 + 170, .55);
-curVous.clic(T('k1', 3.25));
-tl.to(pil2, { scale: .95, duration: .07 }, T('k1', 3.25)); tl.to(pil2, { scale: 1, duration: .3, ease: 'back.out(2.5)' }, T('k1', 3.32));
-curVous.va(T('k1', 3.6), CTA.cx + 120, cy0 + 600, .6);
-curVous.cache(T('k2', .7));
+// « Vous » (curseur clair, visible sur le bleu nuit) clique sur l'audit, puis sur le devis
+const curVousN = curseur('Vous', '#316bff', true);
+const fl1 = { x: PIL[0].x + PIL[0].w / 2 - 92, y: PIL[0].y + 6 }, fl2 = { x: PIL[1].x + PIL[1].w / 2 - 92, y: PIL[1].y + 6 };
+curVousN.montre(T('k1', .3), CTA.cx + 420, CTA.cy + 330);
+curVousN.va(T('k1', .35), fl1.x, fl1.y, .85);
+tl.to(pil1, { y: -6, boxShadow: '0 0 0 8px rgba(49,107,255,.28), 0 18px 40px -10px rgba(8,78,255,.7)', duration: .3, ease: 'power2.out' }, T('k1', 1.05));
+curVousN.clic(T('k1', 1.45));
+tl.to(pil1, { scale: .96, y: 0, duration: .07, ease: 'power2.in' }, T('k1', 1.45)); tl.to(pil1, { scale: 1, duration: .35, ease: 'back.out(2.5)' }, T('k1', 1.52));
+tl.set(q('.fl', pil1), { display: 'none' }, T('k1', 1.53)); tl.set(q('.ok', pil1), { display: 'inline-flex' }, T('k1', 1.53));
+tl.to(q('.pt', pil1), { backgroundColor: '#3ddc84', opacity: 1, duration: .25 }, T('k1', 1.53));
+tl.fromTo(envoye, { autoAlpha: 0, scale: .6, y: 16 }, { autoAlpha: 1, scale: 1, y: 0, duration: .45, ease: 'back.out(2)', immediateRender: false }, T('k1', 1.6));
+cue('valide', T('k1', 1.55), .7);
+tl.to(pil1, { boxShadow: 'inset 0 1px 0 rgba(255,255,255,.25), 0 1px 2px rgba(8,78,255,.2), 0 8px 20px -6px rgba(8,78,255,.45)', duration: .5 }, T('k1', 2.3));
+curVousN.va(T('k1', 2.55), fl2.x, fl2.y, .6);
+tl.to(pil2, { y: -6, boxShadow: '0 0 0 8px rgba(255,255,255,.18), 0 18px 40px -10px rgba(0,0,0,.45)', duration: .3, ease: 'power2.out' }, T('k1', 3.0));
+curVousN.clic(T('k1', 3.35));
+tl.to(pil2, { scale: .96, y: 0, duration: .07, ease: 'power2.in' }, T('k1', 3.35)); tl.to(pil2, { scale: 1, duration: .35, ease: 'back.out(2.5)' }, T('k1', 3.42));
+tl.set(q('.fl', pil2), { display: 'none' }, T('k1', 3.43)); tl.set(q('.ok', pil2), { display: 'inline-flex' }, T('k1', 3.43));
+tl.to(q('.pt', pil2), { backgroundColor: '#12b76a', opacity: 1, duration: .25 }, T('k1', 3.43));
+cue('valide', T('k1', 3.45), .6);
+tl.to(pil2, { boxShadow: '0 4px 8px rgba(14,35,64,.06), 0 12px 24px -6px rgba(14,35,64,.12)', duration: .5 }, T('k1', 4.0));
+curVousN.va(T('k1', 3.75), CTA.cx + 300, cy0 + 690, .7);
+// comme au début du film dans Google : « Vous » clique dans la barre d'adresse, puis s'efface pendant la frappe
+curVousN.va(T('k2', -.3), CTA.cx + 26, cy0 + 588, .32);
+curVousN.clic(T('k2', .05));
+tl.to(urlB, { borderColor: 'rgba(157,184,255,.9)', boxShadow: '0 0 0 6px rgba(49,107,255,.28), inset 0 1px 0 rgba(255,255,255,.12)', duration: .2 }, T('k2', .07));
+curVousN.va(T('k2', .2), CTA.cx + 120, cy0 + 700, .35);
+curVousN.cache(T('k2', .6));
+// les boutons se rangent en haut (plus petits) pour laisser place à l'adresse et au logo
+const tRange = F('k1', -.55);
+tl.to(envoye, { autoAlpha: 0, y: -10, duration: .25, ease: 'power2.in' }, tRange - .2);
+[pil1, pil2].forEach((e, i) => tl.to(e, { left: PILF[i].x, top: PILF[i].y, scale: PS, duration: .85, ease: 'power3.inOut' }, tRange + i * .05));
+cue('whoosh', tRange, .45);
 // optikom.fr tapé dans la barre d'adresse, puis le logo fait sa mise au point
-show(urlB, T('k2', -.35), { y: 16, s: .96, b: 8, d: .5 });
-const finURL = frappe('url2', 'optikom.fr', T('k2', .05), 20, .8);
+show(urlB, T('k2', -.08), { y: 16, s: .96, b: 8, d: .5 });
+const finURL = frappe('url2', 'optikom.fr', T('k2', .12), 20, .8);
 touche(CTA.cx + 470, cy0 + 575, 'Entrée ↵', finURL + .02, finURL + .18);
 tl.fromTo(logo, { autoAlpha: 0, filter: 'blur(26px)', scale: 1.12 }, { autoAlpha: 1, filter: 'blur(0px)', scale: 1, duration: 1.5, ease: 'expo.out', immediateRender: false }, finURL + .3);
 cue('logo', finURL + .3);
 show(lieu, finURL + .7, { y: 20, b: 10, d: .9 });
-const reflet = mk('<span style="position:absolute;top:0;bottom:0;width:120px;left:-160px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg)"></span>', pil1);
+// carton final vivant : reflets, point d'état qui pulse, caméra qui avance
+tl.fromTo(q('.reflet-url', urlB), { x: 0 }, { x: 900, duration: 1.0, ease: 'power2.inOut', immediateRender: false }, finURL + 1.3);
+const reflet = mk('<span style="position:absolute;top:0;bottom:0;width:160px;left:-200px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg)"></span>', pil1);
 pil1.style.overflow = 'hidden';
-tl.fromTo(reflet, { x: 0 }, { x: 900, duration: 1.1, ease: 'power2.inOut' }, DUREE - 2.6);
-cue('brillance', DUREE - 2.6, .4);
+tl.fromTo(reflet, { x: 0 }, { x: 1300, duration: 1.1, ease: 'power2.inOut', immediateRender: false }, DUREE - 2.4);
+cue('brillance', DUREE - 2.4, .4);
 
 /* ---------- profondeur : éléments optiques de premier plan ---------- */
 const FGS = [
@@ -965,7 +1103,8 @@ function sync(t) {
   const s = cam.s;
   W.style.transform = `translate(960px,540px) rotateX(${cam.rx}deg) rotateY(${cam.ry}deg) rotate(${cam.r}deg) scale(${s}) translate(${-cam.x}px,${-cam.y}px)`;
   FGS.forEach((f) => { const sx = 960 + (f.wx - cam.x) * s * f.p, sy = 540 + (f.wy - cam.y) * s * f.p + Math.sin(t * .9 + f.wx) * 8; f.el.style.transform = `translate(${sx - f.r / 2}px,${sy - f.r / 2}px) scale(${s * f.p})`; });
-  CURSEURS.forEach((c) => { c.el.style.left = c.x + 'px'; c.el.style.top = c.y + 'px'; });
+  const kc = clamp(1.16 / s, 1, 1.6); // taille des curseurs à l'écran ≈ constante
+  CURSEURS.forEach((c) => { c.el.style.left = c.x + 'px'; c.el.style.top = c.y + 'px'; c.cz.style.transform = `scale(${kc})`; });
   // recherche
   const typed = REQ.slice(0, Math.round(P.tape || 0));
   tapeEl.textContent = typed;
@@ -1010,15 +1149,18 @@ function sync(t) {
   // enveloppes : du bouton « Envoyer » du téléphone vers la boîte
   if (MT.champs.length) {
     const s0 = { x: ECRAN.x + MT.champs[2].x, y: ECRAN.y + 74 + MT.champs[2].y - MT.sc[4] };
-    const dst = { x: BOX.cx - BOX.w / 2 + 220 + 24 + (BOX.w - 220 - 48) / 2, y: BOX.cy - BOX.h / 2 + ROW_TOP + ROWH / 2 };
-    envs.forEach((e, i) => { const k = P.env[i], u = 1 - k, cx = (s0.x + dst.x) / 2, cy = Math.min(s0.y, dst.y) - 320;
+    const dst = { x: BOX.cx - BOX.w / 2 + 220 + 24 + 64, y: BOX.cy - BOX.h / 2 + ROW_TOP + ROWH / 2 };
+    envs.forEach((e, i) => { const k = P.env[i], u = 1 - k, cx = (s0.x + dst.x) / 2, cy = Math.min(s0.y, dst.y) - 150;
       e.style.left = (u * u * s0.x + 2 * u * k * cx + k * k * dst.x) + 'px'; e.style.top = (u * u * s0.y + 2 * u * k * cy + k * k * dst.y) + 'px'; });
   }
   badge.textContent = Math.round(P.badge);
   notifSmall.textContent = MAILS[Math.round(P.notifIdx)].slice(2, 4).join(' · ');
   // chiffres, garantie, appel à l'action
   c100.textContent = Math.round(P.n100);
+  arcLH.setAttribute('stroke-dashoffset', 314.16 * (1 - P.lh));
   garArc.setAttribute('stroke-dashoffset', 540.4 * (1 - P.arc));
+  garCaret.style.opacity = Math.floor(t * 2.4) % 2 ? .2 : 1;
+  q('.pt', pil1).style.transform = `scale(${1 + .22 * Math.sin(t * 5)})`;
   urlT2.textContent = 'optikom.fr'.slice(0, Math.round(P.url2 || 0));
   urlCaret.style.opacity = Math.floor(t * 2.4) % 2 ? .25 : 1;
   sph.forEach((sp, i) => { sp.style.translate = `0 ${Math.sin(t * .8 + i * 2) * 8}px`; });
@@ -1028,9 +1170,10 @@ function sync(t) {
 function curseurFormulaire() {
   const pt = (i, dx) => ({ x: ECRAN.x + MT.champs[i].x + dx, y: ECRAN.y + 74 + MT.champs[i].y - MT.sc[4] });
   const p0 = pt(0, 40), p1 = pt(1, 40), p2 = pt(2, 30);
-  curClient.va(tJ - .12, p0.x, p0.y, .25); curClient.clic(tJ + .02);
-  curClient.va(f1End - .02, p1.x, p1.y, .15); curClient.clic(f1End + .04);
-  curClient.va(f2End - .18, p2.x, p2.y, .22); curClient.clic(tEnvoi - .02);
+  curClient.va(T('v2', .02), p0.x, p0.y, .22); curClient.clic(tJ + .11);
+  curClient.va(tJ + .16, p0.x + 96, p0.y + 6, .16);      // s'écarte pendant la frappe
+  curClient.va(tJ + .335, p1.x, p1.y, .12); curClient.clic(tJ + .47);
+  curClient.va(tJ + .5, p2.x, p2.y, .3); curClient.clic(tEnvoi - .02);
   const envoiBtn = q('.m-envoi', tel3);
   tl.to(envoiBtn, { scale: .94, duration: .07 }, tEnvoi - .02); tl.to(envoiBtn, { scale: 1, duration: .3, ease: 'back.out(2.5)' }, tEnvoi + .05);
 }
@@ -1038,10 +1181,13 @@ function curseurFormulaire() {
 window.__duree = DUREE;
 window.__cues = CUES;
 window.__seek = (t) => { tl.seek(t, true); sync(t); };
+if (location.search.includes('qa')) { window.__tlqa = tl; window.__camObj = cam; } // contrôles internes
 window.__cam = () => ({ ...cam });
+window.__cameras = () => tl.getTweensOf(cam).map((tw) => [tw.startTime(), tw.endTime()]).sort((a, b) => a[0] - b[0]);
 window.__pret = document.fonts.ready.then(() => {
   mesuresTel(); curseurFormulaire();
   PHRASES.forEach(({ el, o }) => { if (o.fit && el.offsetWidth > o.fit) el.style.fontSize = (parseFloat(el.style.fontSize) * o.fit / el.offsetWidth) + 'px'; });
+  morphH1();
   CUES.sort((a, b) => a.t - b.t);
   window.__seek(0); return true; });
 if (location.search.includes('play')) { const t0 = performance.now(); const off = parseFloat(new URLSearchParams(location.search).get('t') || 0);

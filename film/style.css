@@ -205,7 +205,8 @@ body { font-family: "Bricolage", system-ui, sans-serif; color: var(--ink); -webk
 .onde { position: absolute; border-radius: 50%; border: 3px solid var(--accent); }
 
 /* ACTE 5 — carte */
-.carte-panneau { position: absolute; border-radius: 64px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, #000 0, #000 90%, transparent 100%); mask-image: linear-gradient(180deg, #000 0, #000 90%, transparent 100%); }
+.carte-panneau { position: absolute; border-radius: 64px; overflow: hidden; /* bas découpé comme une côte (plus de bande horizontale) */
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5400 3100' preserveAspectRatio='none'%3E%3Cfilter id='f' x='-5%25' y='-5%25' width='110%25' height='110%25'%3E%3CfeGaussianBlur stdDeviation='22'/%3E%3C/filter%3E%3Cpath filter='url(%23f)' d='M-200 -200H5600V2740C5250 2800 5100 2690 4920 2750S4560 2870 4380 2790S4020 2650 3820 2730S3420 2880 3220 2800S2860 2670 2660 2740S2280 2870 2080 2780S1720 2680 1520 2760S1120 2890 920 2800S540 2690 340 2760S60 2830 -200 2780Z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5400 3100' preserveAspectRatio='none'%3E%3Cfilter id='f' x='-5%25' y='-5%25' width='110%25' height='110%25'%3E%3CfeGaussianBlur stdDeviation='22'/%3E%3C/filter%3E%3Cpath filter='url(%23f)' d='M-200 -200H5600V2740C5250 2800 5100 2690 4920 2750S4560 2870 4380 2790S4020 2650 3820 2730S3420 2880 3220 2800S2860 2670 2660 2740S2280 2870 2080 2780S1720 2680 1520 2760S1120 2890 920 2800S540 2690 340 2760S60 2830 -200 2780Z'/%3E%3C/svg%3E"); -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
 .carte-panneau .trame-large { position: absolute; inset: 0; background-image: radial-gradient(rgb(255 255 255 / .13) 1.4px, transparent 2px); background-size: 30px 30px;
   -webkit-mask-image: radial-gradient(ellipse 70% 60% at 85% 10%, #000, transparent); mask-image: radial-gradient(ellipse 70% 60% at 85% 10%, #000, transparent); }
 .carte-panneau svg.contour { position: absolute; overflow: visible; }
@@ -274,10 +275,26 @@ body { font-family: "Bricolage", system-ui, sans-serif; color: var(--ink); -webk
 .chiffre { padding: 40px 40px; color: #fff; }
 .chiffre .ico { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; background: rgb(255 255 255 / .14); border: 1px solid rgb(255 255 255 / .25); }
 .chiffre .ico svg { width: 32px; height: 32px; }
-.chiffre .gros { font-size: 128px; font-weight: 650; letter-spacing: -0.045em; line-height: 1; margin-top: 54px; white-space: nowrap; }
+.chiffre .gros { font-size: 128px; font-weight: 650; letter-spacing: -0.045em; line-height: 1; margin-top: 4px; white-space: nowrap; }
 .chiffre .gros small { font-size: 0.42em; letter-spacing: -0.02em; margin-left: 10px; }
 .chiffre .lib { font-size: 34px; font-weight: 600; margin-top: 18px; letter-spacing: -0.01em; }
-.chiffre .note { font-size: 22px; line-height: 1.4; margin-top: 12px; color: rgb(255 255 255 / .86); }
+.chiffre .note { font-size: 21px; line-height: 1.4; margin-top: 12px; color: rgb(255 255 255 / .86); }
+.chiffre .apd { font-size: 24px; font-weight: 500; margin-top: 22px; line-height: 1.25; color: rgb(255 255 255 / .85); }
+.chiffre .preuve { position: absolute; left: 40px; right: 40px; bottom: 40px; }
+.chiffre .anneau-lh { position: absolute; left: 32px; top: 26px; width: 134px; height: 134px; overflow: visible; }
+.frise .rail { position: relative; height: 10px; border-radius: 999px; background: rgb(255 255 255 / .2); }
+.frise .rempli { position: absolute; inset: 0; border-radius: 999px; background: #fff; transform-origin: 0 50%; }
+.frise .rail b { position: absolute; top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 6px rgb(255 255 255 / .18); }
+.frise .n0 { left: 0; } .frise .n1 { left: 100%; background: rgb(255 255 255 / .35) !important; }
+.frise-l { display: flex; justify-content: space-between; margin-top: 24px; font-size: 20px; font-weight: 600; color: rgb(255 255 255 / .9); white-space: nowrap; }
+.etapes { display: flex; justify-content: space-between; }
+.etapes .rail { position: absolute; left: 13px; right: 13px; top: 10px; height: 6px; border-radius: 999px; background: rgb(255 255 255 / .2); }
+.etapes .rempli { position: absolute; inset: 0; border-radius: 999px; background: #fff; transform-origin: 0 50%; }
+.etape { position: relative; width: 26px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.etape b { width: 26px; height: 26px; border-radius: 50%; background: rgb(255 255 255 / .3); box-shadow: 0 0 0 6px rgb(255 255 255 / .12); }
+.etape span { font-size: 19px; font-weight: 600; white-space: nowrap; color: rgb(255 255 255 / .9); }
+.av-int { position: absolute; left: -9px; top: -56px; width: 44px; height: 44px; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 10px 22px -8px rgb(0 0 0 / .45); }
+.av-int svg { width: 24px; height: 24px; }
 .ghost { position: absolute; border-radius: 16px; }
 
 /* ACTE 9 — garantie */
@@ -313,7 +330,17 @@ body { font-family: "Bricolage", system-ui, sans-serif; color: var(--ink); -webk
 .cta .fond-cta::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgb(255 255 255 / .06) 1px, transparent 1.6px); background-size: 16px 16px; }
 .cta .h1, .cta .h2 { position: absolute; border-radius: 50%; background: radial-gradient(closest-side, rgb(49 107 255 / .32), transparent); }
 .cta-pilule { position: absolute; font-size: 40px; padding: 30px 46px; gap: 18px; }
-.cta-pilule .pt { width: 18px; height: 18px; border-radius: 50%; background: currentColor; opacity: .9; }
+.cta-pilule .pt { width: 0.4em; height: 0.4em; border-radius: 50%; background: currentColor; opacity: .9; flex: none; }
+.cta-pilule .fl, .cta-pilule .ok { display: inline-flex; align-items: center; }
+.lib-pil { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 26px; font-size: 64px; font-weight: 600; white-space: nowrap; opacity: 0; visibility: hidden; letter-spacing: normal; }
+.lib-pil .pt { width: 0.4em; height: 0.4em; border-radius: 50%; background: currentColor; opacity: .9; flex: none; }
+.lib-pil .fl { display: inline-flex; align-items: center; }
+.puce-ok { position: absolute; display: inline-flex; align-items: center; gap: 12px; padding: 10px 22px 10px 10px; border-radius: 999px; font-size: 26px; font-weight: 650; color: var(--ink); white-space: nowrap; z-index: 16; }
+.puce-ok b { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-strong); }
+.reflet-url { position: absolute; top: 0; bottom: 0; left: -160px; width: 120px; background: linear-gradient(100deg, transparent, rgb(255 255 255 / .3), transparent); transform: skewX(-20deg); }
+.zone-reflet { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; pointer-events: none; }
+.zone-reflet i { position: absolute; top: -30%; bottom: -30%; left: 0; width: 260px; background: linear-gradient(100deg, transparent, rgb(255 255 255 / .9), transparent); transform: skewX(-20deg); mix-blend-mode: overlay; }
+.garantie .vide .caret { background: var(--accent-strong); height: 0.9em; vertical-align: -0.1em; margin-left: 0.12em; }
 .cta-logo { position: absolute; filter: drop-shadow(0 10px 40px rgb(49 107 255 / .35)); }
 .cta-url { position: absolute; font-size: 92px; font-weight: 650; letter-spacing: -0.012em; color: #fff; white-space: nowrap; }
 .cta-lieu { position: absolute; font-size: 26px; font-weight: 500; color: var(--fog); padding: 12px 26px; border-radius: 999px; background: rgb(255 255 255 / .06); border: 1px solid rgb(255 255 255 / .14); white-space: nowrap; }
@@ -345,6 +372,7 @@ body { font-family: "Bricolage", system-ui, sans-serif; color: var(--ink); -webk
 .phrase .mw { position: relative; display: inline-block; }
 .phrase .mot { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.08em 0.03em 0.16em; margin: -0.08em -0.03em -0.16em; }
 .phrase .mi { display: inline-block; }
+.phrase .grp { display: inline-block; }
 .phrase .seg-acc { position: relative; display: inline-block; z-index: 0; }
 .phrase .surligne { position: absolute; left: -0.14em; right: -0.14em; top: 0.06em; bottom: -0.02em; border-radius: 0.16em; background: var(--veil); z-index: -1; transform-origin: 0 50%; }
 .phrase.blanc .surligne { background: rgb(255 255 255 / .2); }
@@ -362,6 +390,7 @@ body { font-family: "Bricolage", system-ui, sans-serif; color: var(--ink); -webk
 
 /* Curseurs numériques étiquetés */
 .curseur { position: absolute; left: 0; top: 0; z-index: 70; pointer-events: none; }
+.curseur .cz { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
 .curseur svg { position: absolute; left: -4px; top: -3px; width: 38px; height: 38px; overflow: visible; filter: drop-shadow(0 4px 6px rgb(14 35 64 / .35)); transform-origin: 4px 3px; }
 .curseur .etiq { position: absolute; left: 24px; top: 32px; padding: 6px 13px 7px; border-radius: 4px 999px 999px 999px; font-size: 18px; font-weight: 600; color: #fff; background: var(--c); white-space: nowrap; box-shadow: 0 6px 14px -6px rgb(14 35 64 / .5); }
 .curseur .onde-clic { position: absolute; left: -32px; top: -32px; width: 64px; height: 64px; border-radius: 50%; border: 3px solid var(--c); opacity: 0; }
@@ -439,7 +468,7 @@ body { font-family: "Bricolage", system-ui, sans-serif; color: var(--ink); -webk
 
 /* Particules (visiteurs) */
 .particule { position: absolute; left: 0; top: 0; width: 70px; height: 6px; margin: -3px 0 0 -66px; border-radius: 999px; transform-origin: 66px 3px;
-  background: linear-gradient(90deg, rgb(255 255 255 / 0), rgb(255 255 255 / .85)); z-index: 20; }
+  background: linear-gradient(90deg, rgb(255 255 255 / 0), rgb(255 255 255 / .85)); z-index: 8; } /* sous le téléphone, la boîte et le badge */
 .particule::after { content: ""; position: absolute; right: -4px; top: -4px; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 0 14px 4px rgb(170 200 255 / .95); }
 .badge-direct { position: absolute; display: inline-flex; align-items: center; gap: 10px; padding: 9px 16px; border-radius: 999px; font-size: 18px; font-weight: 600; white-space: nowrap; z-index: 25; }
 .badge-direct i { width: 10px; height: 10px; border-radius: 50%; background: #e5484d; box-shadow: 0 0 0 4px rgb(229 72 77 / .2); }
