@@ -8,10 +8,10 @@ Voir `JOURNAL.md` : décisions, état, versions, commandes pour reprendre.
 ## Livrables
 | Fichier | Contenu |
 |---|---|
-| `versions/optikom-film-v6.mp4` | Film : 1920×1080, 60 i/s, H.264, texte intégré à l'animation, musique et bruitages (≈ −26 LUFS, place laissée à la voix) |
+| `versions/optikom-film-v6.mp4` | Film : 1920×1080, 60 i/s, H.264, flou de mouvement, texte intégré à l'animation, musique et bruitages (mix −16 LUFS, crête vraie −1 dBTP) |
 | `script/script-voix-off.md` | Script de la voix off : timecodes de début et de fin de chaque phrase, texte à dire, texte à l'image, ce qu'on voit |
 | `script/sous-titres.srt` / `.vtt` | Sous-titres séparés, aux mêmes timecodes (pour les plateformes) |
-| `audio/musique.flac`, `audio/bruitages.flac`, `audio/mix.flac` | Pistes séparées (48 kHz) pour le mixage avec la voix |
+| `audio/musique.flac`, `audio/bruitages.flac`, `audio/mix.flac` | Pistes séparées (48 kHz) : musique et bruitages à −27 LUFS chacun, pour poser la voix par-dessus ; `mix` = son du film |
 
 ## Arborescence
 - `script/lignes.json` : texte source du script (texte à l'image, voix off). **C'est le seul fichier à modifier pour changer un texte.**

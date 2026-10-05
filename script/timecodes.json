@@ -70,7 +70,7 @@
       "id": "s1",
       "acte": "4 Site",
       "texte": "Votre site se construit. Rapide, pensé mobile.",
-      "image": "« <h1>Votre site se construit.</h1> » se tape puis devient le titre ; le code s'écrit et chaque ligne fait apparaître le vrai site, puis la version téléphone ; score de performance 100.",
+      "image": "La ligne de code `<h1>Votre site se construit.</h1>` se tape puis devient le titre ; le code s'écrit et chaque ligne fait apparaître le vrai site, puis la version téléphone ; score de performance 100.",
       "debut": 20.77,
       "fin": 24.13,
       "duree_voix": 3.07
