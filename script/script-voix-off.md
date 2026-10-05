@@ -1,35 +1,31 @@
 # Script de la voix off — film Optikom
 
-Durée du film : **1:53.11** (113.11 s). Débit visé : ~14 caractères/s, voix posée, souriante, sans emphase publicitaire.
-Chaque phrase commence au timecode indiqué (début du sous-titre). Le sous-titre reste affiché jusqu'à la fin indiquée : finir la phrase avant.
+Version : v6 — film court et dynamique, texte intégré à l'animation.
+Durée du film : **1:11.77** (71.77 s). Débit visé : ~15 caractères/s, voix dynamique mais posée, souriante, sans emphase publicitaire.
+Chaque phrase commence au timecode indiqué : c'est l'instant où le même texte apparaît à l'image. Finir la phrase avant le timecode de fin.
+Les nombres sont écrits en toutes lettres dans la colonne « Voix off » pour la lecture.
 
-| # | Acte | Début | Fin | Voix off (à dire) | Sous-titre affiché | À l'image |
+| # | Acte | Début | Fin | Voix off (à dire) | Texte à l'image | À l'image |
 |---|---|---|---|---|---|---|
-| 1 | 1 Problème | 0:00.60 | 0:03.66 | Vos clients vous cherchent sur Google. | Vos clients vous cherchent sur Google. | Recherche Google « plombier Vannes » tapée lettre à lettre. |
-| 2 | 1 Problème | 0:03.96 | 0:07.53 | Mais ce sont vos concurrents qu'ils trouvent. | Mais ce sont vos concurrents qu'ils trouvent. | Trois concurrents en tête ; « Votre entreprise ? Introuvable. » en rouge. |
-| 3 | 1 Problème | 0:07.83 | 0:10.89 | Votre site ? Daté. Lent sur téléphone. | Votre site ? Daté. Lent sur téléphone. | L'emplacement rouge devient l'ancien site ; téléphone bloqué sur 8,4 s. |
-| 4 | 1 Problème | 0:11.19 | 0:13.97 | Et pas une seule demande de devis. | Et pas une seule demande de devis. | Widget « 0 demande » qui tremble. |
-| 5 | 2 Audit | 0:15.17 | 0:18.02 | Tout commence par un audit gratuit. | Tout commence par un audit gratuit. | Loupe de mise au point Optikom : tout est flou sauf sous la loupe. |
-| 6 | 2 Audit | 0:18.32 | 0:21.96 | Il montre ce qui vous fait perdre des clients. | Il montre ce qui vous fait perdre des clients. | 4 pastilles numérotées se posent, puis volent dans le rapport d'audit. |
-| 7 | 3 Maquette | 0:23.16 | 0:27.15 | Chaque problème trouve sa solution sur la maquette. | Chaque problème trouve sa solution sur la maquette. | Chaque ligne rouge du rapport devient une solution bleue et vole dans la maquette. |
-| 8 | 3 Maquette | 0:27.45 | 0:31.37 | Vous validez tout, avant la moindre ligne de code. | Vous validez tout, avant la moindre ligne de code. | Clic sur « Valider la maquette » : coche, repères bleus. |
-| 9 | 4 Construction | 0:32.57 | 0:36.56 | Votre site se construit à partir de cette maquette. | Votre site se construit à partir de cette maquette. | La maquette filaire est remplacée bloc par bloc par le vrai site. |
-| 10 | 4 Construction | 0:36.86 | 0:40.00 | Rapide, clair, pensé pour le téléphone. | Rapide, clair, pensé pour le téléphone. | Version téléphone au premier plan, jauges de performance. |
-| 11 | 5 Mise en ligne | 0:41.20 | 0:44.12 | Il est en ligne. Google le découvre. | Il est en ligne. Google le découvre. | Clic « Mettre en ligne » : l'adresse devient votre-entreprise.fr, ondes. |
-| 12 | 5 Mise en ligne | 0:44.42 | 0:48.77 | Votre fiche Google est prête, à Vannes et dans le Golfe. | Votre fiche Google est prête, à Vannes et dans le Golfe. | Le site se replie en repère sur Vannes ; carte du Golfe, fiche Google. |
-| 13 | 5 Mise en ligne | 0:49.07 | 0:52.06 | Vos clients vous trouvent sur Google. | Vos clients vous trouvent sur Google. | Le résultat Google revient, « Votre entreprise » monte en tête. |
-| 14 | 6 Visiteurs | 0:53.26 | 0:56.33 | Les visiteurs arrivent sur votre site. | Les visiteurs arrivent sur votre site. | Le résultat devient un téléphone ; points lumineux qui arrivent ; courbe de visites. |
-| 15 | 6 Visiteurs | 0:56.63 | 1:00.76 | Ils voient votre travail, vos horaires, votre numéro. | Ils voient votre travail, vos horaires, votre numéro. | Défilement : réalisations, horaires, bouton Appeler. |
-| 16 | 7 Demandes | 1:01.96 | 1:03.81 | Et ils vous écrivent. | Et ils vous écrivent. | Le visiteur appuie sur « Demander un devis ». |
-| 17 | 7 Demandes | 1:04.11 | 1:08.25 | Les demandes de devis arrivent dans votre boîte mail. | Les demandes de devis arrivent dans votre boîte mail. | Enveloppes qui volent vers la boîte de réception, notifications. |
-| 18 | 8 Résultat | 1:09.45 | 1:13.01 | Votre site en ligne à partir de trente jours. | Votre site en ligne à partir de 30 jours. | Les messages deviennent trois cartes bleues ; « 30 jours ». |
-| 19 | 8 Résultat | 1:13.31 | 1:17.38 | Construit comme le nôtre : cent sur cent en vitesse. | Construit comme le nôtre : 100/100 en vitesse. | « 100/100 » ; score de vitesse d'optikom.fr. |
-| 20 | 8 Résultat | 1:17.68 | 1:20.96 | Un seul interlocuteur, du devis au suivi. | Un seul interlocuteur, du devis au suivi. | « 1 seul interlocuteur ». |
-| 21 | 9 Garantie | 1:22.16 | 1:25.58 | Notre garantie : [phrase à compléter, ~3 s] | Notre garantie : [À COMPLÉTER] | Les cartes s'empilent en carte « Notre garantie ». |
-| 22 | 10 Prix | 1:26.78 | 1:30.13 | Votre site : à partir de mille cent euros. | Votre site : à partir de 1 100 €. | La garantie se scinde en deux cartes de prix : 1 100 €. |
-| 23 | 10 Prix | 1:30.43 | 1:36.14 | Votre référencement local : à partir de deux cent cinquante euros par mois. | Référencement local : à partir de 250 €/mois. | Mise en avant : 250 €/mois. |
-| 24 | 11 Appel à l'action | 1:37.34 | 1:42.33 | Demandez votre audit gratuit : réponse sous quarante-huit heures. | Audit gratuit sous 48 h. | Les cartes deviennent les boutons du panneau final ; logo Optikom. |
-| 25 | 11 Appel à l'action | 1:42.63 | 1:45.84 | Et votre devis sous vingt-quatre heures. | Votre devis sous 24 h. | Le bouton « Votre devis sous 24 h » s'allume. |
-| 26 | 11 Appel à l'action | 1:46.14 | 1:49.91 | Optikom, agence web à Vannes. optikom point f r. | Optikom, agence web à Vannes · optikom.fr | optikom.fr, Vannes · Golfe du Morbihan, 06 33 46 79 83. |
+| 1 | 1 Problème | 0:00.50 | 0:03.33 | Vos clients vous cherchent sur Google. | Vos clients vous cherchent sur Google. | Le curseur « Votre client » clique dans Google et tape « plombier vannes » ; suggestions automatiques. |
+| 2 | 1 Problème | 0:03.58 | 0:05.82 | Ils trouvent vos concurrents. | Ils trouvent vos concurrents. | Trois résultats concurrents s'affichent ; votre entreprise est introuvable (cadre rouge). |
+| 3 | 1 Problème | 0:06.07 | 0:08.30 | Votre site ? Daté. Trop lent. | Votre site ? Daté. Trop lent. | Le cadre rouge s'ouvre sur l'ancien site ; le téléphone tourne dans le vide, chrono 8,4 s. |
+| 4 | 1 Problème | 0:08.55 | 0:10.45 | Résultat : zéro demande. | Résultat : zéro demande. | Boîte de réception : 0 demande. |
+| 5 | 2 Audit | 0:11.15 | 0:13.85 | Notre audit gratuit montre pourquoi. | Notre audit gratuit montre pourquoi. | La loupe de mise au point balaie le site : 4 problèmes épinglés, rangés dans le rapport. |
+| 6 | 3 Maquette | 0:14.55 | 0:17.25 | Votre maquette corrige chaque point. | Votre maquette corrige chaque point. | Éditeur de maquette : le curseur « Optikom » pose les blocs (titre, photos, bouton devis, mobile). |
+| 7 | 3 Maquette | 0:17.50 | 0:19.80 | Vous validez avant qu'on code. | Vous validez avant qu'on code. | Le curseur « Vous » clique sur « Valider » ; commentaire « Parfait, on valide ! ». |
+| 8 | 4 Site | 0:20.50 | 0:23.87 | Votre site se construit. Rapide, pensé mobile. | Votre site se construit. Rapide, pensé mobile. | Le code s'écrit, le vrai site remplace la maquette, version téléphone, score 100. |
+| 9 | 5 Local | 0:24.57 | 0:28.00 | En ligne, il s'ancre à Vannes et dans le Golfe. | En ligne, il s'ancre à Vannes et dans le Golfe. | Clic « Mettre en ligne », barre de déploiement ; le site devient un repère sur la carte du Golfe, fiche Google. |
+| 10 | 5 Local | 0:28.25 | 0:31.02 | Vos clients vous trouvent sur Google. | Vos clients vous trouvent sur Google. | La recherche Google revient : « Votre entreprise » monte en tête. |
+| 11 | 6 Demandes | 0:31.72 | 0:33.62 | Ils visitent votre site… | Ils visitent votre site… | Le curseur « Votre client » clique sur le résultat ; le site s'ouvre sur téléphone, les visiteurs affluent. |
+| 12 | 6 Demandes | 0:33.87 | 0:36.03 | …et vous demandent un devis. | …et vous demandent un devis. | Formulaire rempli, envoyé ; les demandes arrivent dans votre boîte mail. |
+| 13 | 7 Chiffres | 0:36.73 | 0:39.30 | En ligne à partir de trente jours. | En ligne à partir de 30 jours. | Carte bleue « 30 jours ». |
+| 14 | 7 Chiffres | 0:39.55 | 0:43.32 | Construit comme le nôtre : cent sur cent en vitesse. | Construit comme le nôtre : 100/100 en vitesse. | Carte « 100/100 » (score Lighthouse d'optikom.fr, sept. 2026). |
+| 15 | 7 Chiffres | 0:43.57 | 0:46.60 | Un seul interlocuteur, du devis au suivi. | Un seul interlocuteur, du devis au suivi. | Carte « 1 interlocuteur ». |
+| 16 | 8 Garantie | 0:47.30 | 0:51.07 | Notre garantie : [phrase à compléter, environ 2,5 s] | Notre garantie : [À COMPLÉTER] | Les cartes s'empilent en carte « Notre garantie ». |
+| 17 | 9 Prix | 0:51.77 | 0:54.80 | Votre site, à partir de mille cent euros. | Votre site à partir de 1 100 €. | Carte prix « Création de site », 1 100 €. |
+| 18 | 9 Prix | 0:55.05 | 0:59.55 | Le référencement local, dès deux cent cinquante euros par mois. | Référencement local dès 250 €/mois. | Carte prix « Référencement local », 250 €/mois. |
+| 19 | 10 Action | 1:00.25 | 1:05.35 | Audit gratuit sous quarante-huit heures. Devis sous vingt-quatre heures. | Audit gratuit sous 48 h. Devis sous 24 h. | Les cartes deviennent les deux boutons ; le curseur « Vous » clique sur « Audit gratuit ». |
+| 20 | 10 Action | 1:05.60 | 1:09.17 | Optikom, agence web à Vannes : optikom point f r. | optikom.fr | « optikom.fr » se tape dans la barre d'adresse ; le logo Optikom fait sa mise au point. |
 
-Fin du film (carton final tenu) : 1:53.11
+Fin du film (carton final tenu) : 1:11.77

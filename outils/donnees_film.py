@@ -16,6 +16,7 @@ communes = [
 p = dict(lonMin=-3.73483, latMax=48.21088, kLon=0.6724360516376464, echelle=840.2508720442286, marge=20)
 pts = [{"nom": n, "x": p["marge"] + (lo - p["lonMin"]) * p["kLon"] * p["echelle"], "y": p["marge"] + (p["latMax"] - la) * p["echelle"]} for n, lo, la in communes]
 out = {"duree": tc["duree_film"], "sousTitres": [{"t0": l["debut"], "t1": l["fin"], "texte": l["texte"], "acte": l["acte"]} for l in tc["lignes"]],
+       "lignes": {l["id"]: {"t0": l["debut"], "t1": l["fin"], "texte": l["texte"], "acte": l["acte"]} for l in tc["lignes"] if "id" in l},
        "carte": {"d": d, "w": 1000, "h": 824, "communes": pts}}
 (R / "film/data.js").write_text("window.DATA = " + json.dumps(out, ensure_ascii=False) + ";\n")
 print("data.js ok", out["duree"], len(out["sousTitres"]))
