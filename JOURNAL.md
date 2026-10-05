@@ -40,7 +40,14 @@ Les images rendues (`versions/frames-*`) et les WAV ne sont pas versionnés (ré
       carte, frise / jauge / parcours, garantie qui s'ouvre de la pile avec poussée et reflet, prix mis en avant à tour
       de rôle avec points cochés), appel à l'action en grand avec clic et confirmation, panneau final opaque,
       iris de la carte sur 0,5 s, curseur « Vous » clair sur fond sombre, pointes de curseur jamais sur le texte.
-- [ ] Revue DA de la v6b, rendu final 1080p60, livraison.
+- [x] 2e revue DA (v6b) → v6c : état « envoyé » conservé (coches, point vert) et clic dans la barre d'adresse ; caméra qui
+      attend la fin de la phrase c3 ; « 1 interlocuteur » gardé jusqu'à l'ouverture de la garantie ; garantie qui descend
+      avec la caméra et se partage au centre (remplissage bleu opaque) ; appel à l'action sur place (les prix deviennent
+      les boutons, libellés en fondu, cercle bleu nuit depuis les boutons) ; boîte mail et écran du téléphone opaques ;
+      bas de carte découpé en côte ; jauge visible ; cartes voisines entières, floutées ; son à −16 LUFS / −1 dBTP.
+- [x] Contrôles automatiques : `film/verif-texte.mjs` (texte, caméra) ; animations sans chevauchement de propriété
+      (rendu identique quel que soit le processus qui calcule l'image).
+- [ ] Rendu final 1080p60 avec flou de mouvement → `versions/optikom-film-v6.mp4`, livraison.
 
 ## Versions
 | Version | Fichier | Notes |
@@ -50,7 +57,9 @@ Les images rendues (`versions/frames-*`) et les WAV ne sont pas versionnés (ré
 | v2–v4 | (non versionnées) | revues DA successives |
 | v5 | versions/optikom-film-v5.mp4 | livrée le 3 octobre (~95 s, sous-titres en pastille) |
 | v6a | versions/apercu-v6a-540p.mp4 | aperçu interne de la v6 (72 s) — revue DA : seconde moitié trop statique, CTA vide |
-| v6b | versions/apercu-v6b-540p.mp4 | aperçu interne après corrections de la revue |
+| v6b | (non versionné) | aperçu après la 1re revue — envoyé à Arthur comme aperçu intermédiaire |
+| v6c | versions/apercu-v6c-540p.mp4 | aperçu après la 2e revue (charnières, son) |
+| **v6** | versions/optikom-film-v6.mp4 | **version livrée** : 1080p 60 i/s, flou de mouvement, son −16 LUFS |
 
 ## Points ouverts
 - Garantie : « [À COMPLÉTER] » (ligne g1 de `script/lignes.json` + carte de l'acte 8 dans `film/scene.js`).

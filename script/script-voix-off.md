@@ -1,6 +1,6 @@
 # Script de la voix off — film Optikom
 
-Version : v6b — film court et dynamique, texte intégré à l'animation (revue : chaque phrase lisible en entier ≥ 1,5 s).
+Version : v6 (livrée) — film court et dynamique, texte intégré à l'animation, chaque phrase lisible en entier ≥ 1,5 s.
 Durée du film : **1:12.13** (72.13 s). Débit visé : ~15 caractères/s, voix dynamique mais posée, souriante, sans emphase publicitaire.
 Chaque phrase commence au timecode indiqué : c'est l'instant où le même texte apparaît à l'image. Finir la phrase avant le timecode de fin.
 Les nombres sont écrits en toutes lettres dans la colonne « Voix off » pour la lecture.
