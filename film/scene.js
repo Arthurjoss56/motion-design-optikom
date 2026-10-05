@@ -795,10 +795,10 @@ const notif = mk(`<div class="notif carte-verre" style="z-index:11"><i>${I.mail(
 at(notif, BOX.cx + BOX.w / 2 - 175, BOX.cy - BOX.h / 2 - 56); set0(notif, { xPercent: -50, yPercent: -50, autoAlpha: 0 });
 const notifSmall = q('small', notif);
 // la boîte s'ouvre comme une fenêtre, opaque dès sa première image (la carte ne se voit jamais au travers)
-tl.set(boite, { autoAlpha: 1, clipPath: 'inset(46% 46% 46% 46% round 24px)' }, T('v2', -.25));
-tl.fromTo(boite, { scale: .94, y: 30 }, { scale: 1, y: 0, duration: .6, ease: 'expo.out', immediateRender: false }, T('v2', -.25));
-tl.to(boite, { clipPath: 'inset(0% 0% 0% 0% round 24px)', duration: .42, ease: 'power3.out' }, T('v2', -.25));
-tl.set(boite, { clipPath: 'none' }, T('v2', .2));
+tl.set(boite, { autoAlpha: 1, clipPath: 'inset(47% 47% 47% 47% round 24px)' }, T('v2', -.3));
+tl.fromTo(boite, { scale: .88, y: 30 }, { scale: 1, y: 0, duration: .6, ease: 'expo.out', immediateRender: false }, T('v2', -.3));
+tl.to(boite, { clipPath: 'inset(0% 0% 0% 0% round 24px)', duration: .36, ease: 'power2.inOut' }, T('v2', -.3));
+tl.set(boite, { clipPath: 'none' }, T('v2', .08));
 cue('pop', T('v2', -.22), .5);
 phrase('v2', 4400, -390, '…et vous demandent [[un devis.]]', { taille: 80, blanc: true });
 // le visiteur remplit et envoie le formulaire
@@ -933,7 +933,7 @@ cue('whoosh', tL, .8);
 const CONTENU = '.ico, .apd, .gros, .lib, .note, .preuve, .anneau-lh';
 chiffres.forEach((c, i) => {
   if (i < 2) tl.to(qa(CONTENU, c), { autoAlpha: 0, duration: .25, ease: 'power2.in' }, tL);
-  tl.to(c, { autoAlpha: 1, filter: 'blur(0px)', duration: .14, ease: 'power1.out' }, tL);
+  tl.to(c, { autoAlpha: 1, filter: 'blur(0px)', duration: .14, ease: 'power1.out' }, i < 2 ? tL + .22 : tL);
   tl.to(c, { left: GAR.cx - CHW / 2, top: GAR.cy - CHH / 2, rotation: (i - 1) * 4, scale: .82, duration: .72, ease: 'power3.inOut' }, tL + (2 - i) * .04);
 });
 // la carte du dessus s'ouvre : la garantie (blanche, opaque) épouse son rectangle à chaque image
@@ -942,7 +942,9 @@ tl.set([chiffres[0], chiffres[1]], { autoAlpha: 0 }, tG0 + .02);
 tl.set(gar, { left: GAR.cx - CHW / 2, top: GAR.cy - CHH / 2, width: CHW, height: CHH, rotation: 4, scale: .82 }, tG0 - .01);
 tl.to([chiffres[2], gar], { left: GAR.cx - GAR.w / 2, top: GAR.cy - GAR.h / 2, width: GAR.w, height: GAR.h, rotation: 0, scale: 1, duration: .8, ease: 'expo.out' }, tG0);
 tl.to(qa(CONTENU, chiffres[2]), { autoAlpha: 0, duration: .15, ease: 'power1.in' }, tG0);
-tl.fromTo(gar, { autoAlpha: 0 }, { autoAlpha: 1, duration: .28, ease: 'power1.inOut', immediateRender: false }, tG0 + .04);
+tl.set(gar, { autoAlpha: 1, clipPath: 'inset(0% 100% 0% 0% round 24px)' }, tG0 + .04);
+tl.to(gar, { clipPath: 'inset(0% 0% 0% 0% round 24px)', duration: .3, ease: 'power2.inOut' }, tG0 + .04);
+tl.set(gar, { clipPath: 'none' }, tG0 + .35);
 tl.set(chiffres[2], { autoAlpha: 0 }, tG0 + .34);
 cue('pop', tG0, .5);
 const garParts = qa('.sceau, h3, .vide', gar); set0(garParts, { autoAlpha: 0 });
@@ -1036,9 +1038,10 @@ PX.forEach((p, i) => {
   tl.set(c, { autoAlpha: 0 }, tN + .72 + i * .05);
 });
 // le panneau bleu nuit s'ouvre depuis le centre des boutons (opaque à chaque image)
-tl.set(cta, { autoAlpha: 1, clipPath: 'circle(0% at 50% 50%)' }, tN + .45);
-tl.to(cta, { clipPath: 'circle(75% at 50% 50%)', duration: .85, ease: 'power2.inOut' }, tN + .45);
-tl.set(cta, { clipPath: 'none' }, tN + 1.32);
+const OY = ((PIL[0].y - cy0) / CTA.h * 100).toFixed(2); // centre du cercle : derrière le bouton « Audit »
+tl.set(cta, { autoAlpha: 1, clipPath: `circle(5.5% at 50% ${OY}%)` }, tN + .55);
+tl.to(cta, { clipPath: `circle(80% at 50% ${OY}%)`, duration: .9, ease: 'none' }, tN + .55);
+tl.set(cta, { clipPath: 'none' }, tN + 1.46);
 sph.forEach((s, i) => show(s, T('k1', .2 + i * .15), { s: .7, y: 30, b: 16, d: 1.3 }));
 show(anneauCTA, T('k1', .5), { s: .7, y: 0, b: 14, d: 1.3 });
 // « Vous » (curseur clair, visible sur le bleu nuit) clique sur l'audit, puis sur le devis
@@ -1066,7 +1069,7 @@ curVousN.va(T('k1', 3.75), CTA.cx + 300, cy0 + 690, .7);
 // comme au début du film dans Google : « Vous » clique dans la barre d'adresse, puis s'efface pendant la frappe
 curVousN.va(T('k2', -.3), CTA.cx + 26, cy0 + 588, .32);
 curVousN.clic(T('k2', .05));
-tl.to(urlB, { borderColor: 'rgba(157,184,255,.9)', boxShadow: '0 0 0 6px rgba(49,107,255,.28), inset 0 1px 0 rgba(255,255,255,.12)', duration: .2 }, T('k2', .07));
+tl.to(urlB, { borderColor: 'rgba(157,184,255,.9)', boxShadow: '0 0 0 6px rgba(49,107,255,.28), inset 0 1px 0 rgba(255,255,255,.12)', duration: .1 }, T('k2', .05));
 curVousN.va(T('k2', .2), CTA.cx + 120, cy0 + 700, .35);
 curVousN.cache(T('k2', .6));
 // les boutons se rangent en haut (plus petits) pour laisser place à l'adresse et au logo
@@ -1076,7 +1079,7 @@ tl.to(envoye, { autoAlpha: 0, y: -10, duration: .25, ease: 'power2.in' }, tRange
 cue('whoosh', tRange, .45);
 // optikom.fr tapé dans la barre d'adresse, puis le logo fait sa mise au point
 show(urlB, T('k2', -.08), { y: 16, s: .96, b: 8, d: .5 });
-const finURL = frappe('url2', 'optikom.fr', T('k2', .12), 20, .8);
+const finURL = frappe('url2', 'optikom.fr', T('k2', .27), 20, .8);
 touche(CTA.cx + 470, cy0 + 575, 'Entrée ↵', finURL + .02, finURL + .18);
 tl.fromTo(logo, { autoAlpha: 0, filter: 'blur(26px)', scale: 1.12 }, { autoAlpha: 1, filter: 'blur(0px)', scale: 1, duration: 1.5, ease: 'expo.out', immediateRender: false }, finURL + .3);
 cue('logo', finURL + .3);
