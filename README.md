@@ -1,6 +1,6 @@
 # Film de motion design Optikom
 
-Film de marque de 72 s pour l'agence web Optikom (Vannes). Il est entièrement fabriqué en code : une scène HTML/CSS et une timeline GSAP, rendues image par image. Il n'y a aucune capture d'écran collée.
+Film de marque de 64 s pour l'agence web Optikom (Vannes). Il est entièrement fabriqué en code : une scène HTML/CSS et une timeline GSAP, rendues image par image. Il n'y a aucune capture d'écran collée.
 
 ## Où en est-on ? (pour reprendre si la session coupe)
 Voir `JOURNAL.md` : décisions, état, versions, commandes pour reprendre.
@@ -8,7 +8,7 @@ Voir `JOURNAL.md` : décisions, état, versions, commandes pour reprendre.
 ## Livrables
 | Fichier | Contenu |
 |---|---|
-| `versions/optikom-film-v6.mp4` | Film : 1920×1080, 60 i/s, H.264, flou de mouvement, texte intégré à l'animation, musique et bruitages (mix −16 LUFS, crête vraie −1 dBTP) |
+| `versions/optikom-film-v7.mp4` | Film : 1920×1080, 60 i/s, H.264, flou de mouvement, texte intégré à l'animation, musique et bruitages (mix −16 LUFS, crête vraie −1 dBTP) |
 | `script/script-voix-off.md` | Script de la voix off : timecodes de début et de fin de chaque phrase, texte à dire, texte à l'image, ce qu'on voit |
 | `script/sous-titres.srt` / `.vtt` | Sous-titres séparés, aux mêmes timecodes (pour les plateformes) |
 | `audio/musique.flac`, `audio/bruitages.flac`, `audio/mix.flac` | Pistes séparées (48 kHz) : musique et bruitages à −27 LUFS chacun, pour poser la voix par-dessus ; `mix` = son du film |

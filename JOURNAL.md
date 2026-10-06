@@ -67,3 +67,6 @@ Les images rendues (`versions/frames-*`) et les WAV ne sont pas versionnés (ré
   sept. 2026, 1 interlocuteur, 48 h, 24 h, prix, TVA art. 293 B). Fiche Google, boîte mail, résultats de recherche,
   score de performance = « Illustration ». Noms des demandes (Claire M., Thomas L., Sophie R.) et concurrents fictifs.
 - Délais 24 h / 48 h : « ouvrés » sur le site.
+
+## v7 (6 octobre 2026)
+Demande d'Arthur : retirer les tarifs ; garantie « Vous rendre visible sur Google ». Le film passe à 64 s, la garantie se tape dans la carte puis se partage directement en boutons d'appel à l'action. Fichier : `versions/optikom-film-v7.mp4`.
