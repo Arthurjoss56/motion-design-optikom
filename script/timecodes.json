@@ -1,6 +1,6 @@
 {
-  "version": "v6 (livrée) — film court et dynamique, texte intégré à l'animation, chaque phrase lisible en entier ≥ 1,5 s",
-  "duree_film": 72.13,
+  "version": "v7 — sans les tarifs, garantie « vous rendre visible sur Google »",
+  "duree_film": 64.48,
   "lignes": [
     {
       "id": "p1",
@@ -143,41 +143,21 @@
     {
       "id": "g1",
       "acte": "8 Garantie",
-      "texte": "Notre garantie : [À COMPLÉTER]",
-      "voix": "Notre garantie : [phrase à compléter, environ 2,5 s]",
-      "image": "Les cartes s'empilent, celle du dessus s'ouvre en carte « Notre garantie » : sceau qui se dessine, champ [À COMPLÉTER], reflet.",
+      "texte": "Notre garantie : vous rendre visible sur Google.",
+      "image": "Les cartes s'empilent, celle du dessus s'ouvre en carte « Notre garantie » : sceau qui se dessine, « Vous rendre visible sur Google » se tape dans le champ, reflet.",
       "debut": 47.67,
-      "fin": 51.43,
-      "duree_voix": 3.47
-    },
-    {
-      "id": "x1",
-      "acte": "9 Prix",
-      "texte": "Votre site à partir de 1 100 €.",
-      "voix": "Votre site, à partir de mille cent euros.",
-      "image": "La garantie se partage en deux cartes de prix ; « Création de votre site, à partir de 1 100 € » s'avance, ses points se cochent.",
-      "debut": 52.13,
-      "fin": 55.17,
-      "duree_voix": 2.73
-    },
-    {
-      "id": "x2",
-      "acte": "9 Prix",
-      "texte": "Référencement local dès 250 €/mois.",
-      "voix": "Le référencement local, dès deux cent cinquante euros par mois.",
-      "image": "La caméra passe à « Référencement local, à partir de 250 €/mois » ; ses points se cochent. TVA non applicable, art. 293 B du CGI.",
-      "debut": 55.42,
-      "fin": 59.92,
-      "duree_voix": 4.2
+      "fin": 51.17,
+      "duree_voix": 3.2
     },
     {
       "id": "k1",
       "acte": "10 Action",
       "texte": "Audit gratuit sous 48 h. Devis sous 24 h.",
       "voix": "Audit gratuit sous quarante-huit heures. Devis sous vingt-quatre heures.",
-      "image": "Les cartes deviennent deux grands boutons sur un panneau bleu nuit ; le curseur « Vous » clique « Audit gratuit sous 48 h » (« Demande envoyée »), puis « Devis sous 24 h ».",
-      "debut": 60.62,
-      "fin": 65.72,
+      "image": "La garantie se partage et se rétracte en deux grands boutons sur un panneau bleu nuit ; le curseur « Vous » clique « Audit gratuit sous 48 h » (« Demande envoyée »), puis « Devis sous 24 h ».",
+      "avant": 1.1,
+      "debut": 52.97,
+      "fin": 58.07,
       "duree_voix": 4.8
     },
     {
@@ -186,8 +166,8 @@
       "texte": "optikom.fr",
       "voix": "Optikom, agence web à Vannes : optikom point f r.",
       "image": "Les boutons se rangent ; « optikom.fr » se tape dans la barre d'adresse, Entrée, le logo Optikom fait sa mise au point ; Vannes · Golfe du Morbihan · 06 33 46 79 83.",
-      "debut": 65.97,
-      "fin": 69.53,
+      "debut": 58.32,
+      "fin": 61.88,
       "duree_voix": 3.27
     }
   ]

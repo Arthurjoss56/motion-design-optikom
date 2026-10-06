@@ -31,6 +31,7 @@ def main():
     for ligne in data["lignes"]:
         if acte_prec is not None and ligne["acte"] != acte_prec:
             t += PAUSE_ACTE
+        t += ligne.get("avant", 0)  # respiration supplémentaire avant cette ligne (transition à l'image)
         if "debut_force" in ligne:
             t = max(t, ligne["debut_force"])
         dite = len(ligne.get("voix", ligne["texte"])) / CPS

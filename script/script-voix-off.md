@@ -1,7 +1,7 @@
 # Script de la voix off — film Optikom
 
-Version : v6 (livrée) — film court et dynamique, texte intégré à l'animation, chaque phrase lisible en entier ≥ 1,5 s.
-Durée du film : **1:12.13** (72.13 s). Débit visé : ~15 caractères/s, voix dynamique mais posée, souriante, sans emphase publicitaire.
+Version : v7 — sans les tarifs, garantie « vous rendre visible sur Google ».
+Durée du film : **1:04.48** (64.48 s). Débit visé : ~15 caractères/s, voix dynamique mais posée, souriante, sans emphase publicitaire.
 Chaque phrase commence au timecode indiqué : c'est l'instant où le même texte apparaît à l'image. Finir la phrase avant le timecode de fin.
 Les nombres sont écrits en toutes lettres dans la colonne « Voix off » pour la lecture.
 
@@ -22,10 +22,8 @@ Les nombres sont écrits en toutes lettres dans la colonne « Voix off » pour l
 | 13 | 7 Chiffres | 0:37.10 | 0:39.67 | En ligne à partir de trente jours. | En ligne à partir de 30 jours. | Les demandes deviennent trois cartes ; la caméra s'arrête sur « à partir de 30 jours » : la frise « Maquette validée → En ligne » se remplit. |
 | 14 | 7 Chiffres | 0:39.92 | 0:43.68 | Construit comme le nôtre : cent sur cent en vitesse. | Construit comme le nôtre : 100/100 en vitesse. | Carte suivante : la jauge balaie le cercle jusqu'à 100/100 (score Lighthouse mobile d'optikom.fr, sept. 2026). |
 | 15 | 7 Chiffres | 0:43.93 | 0:46.97 | Un seul interlocuteur, du devis au suivi. | Un seul interlocuteur, du devis au suivi. | Carte suivante : « 1 interlocuteur », le même avatar suit chaque étape (devis, maquette, site, suivi). |
-| 16 | 8 Garantie | 0:47.67 | 0:51.43 | Notre garantie : [phrase à compléter, environ 2,5 s] | Notre garantie : [À COMPLÉTER] | Les cartes s'empilent, celle du dessus s'ouvre en carte « Notre garantie » : sceau qui se dessine, champ [À COMPLÉTER], reflet. |
-| 17 | 9 Prix | 0:52.13 | 0:55.17 | Votre site, à partir de mille cent euros. | Votre site à partir de 1 100 €. | La garantie se partage en deux cartes de prix ; « Création de votre site, à partir de 1 100 € » s'avance, ses points se cochent. |
-| 18 | 9 Prix | 0:55.42 | 0:59.92 | Le référencement local, dès deux cent cinquante euros par mois. | Référencement local dès 250 €/mois. | La caméra passe à « Référencement local, à partir de 250 €/mois » ; ses points se cochent. TVA non applicable, art. 293 B du CGI. |
-| 19 | 10 Action | 1:00.62 | 1:05.72 | Audit gratuit sous quarante-huit heures. Devis sous vingt-quatre heures. | Audit gratuit sous 48 h. Devis sous 24 h. | Les cartes deviennent deux grands boutons sur un panneau bleu nuit ; le curseur « Vous » clique « Audit gratuit sous 48 h » (« Demande envoyée »), puis « Devis sous 24 h ». |
-| 20 | 10 Action | 1:05.97 | 1:09.53 | Optikom, agence web à Vannes : optikom point f r. | optikom.fr | Les boutons se rangent ; « optikom.fr » se tape dans la barre d'adresse, Entrée, le logo Optikom fait sa mise au point ; Vannes · Golfe du Morbihan · 06 33 46 79 83. |
+| 16 | 8 Garantie | 0:47.67 | 0:51.17 | Notre garantie : vous rendre visible sur Google. | Notre garantie : vous rendre visible sur Google. | Les cartes s'empilent, celle du dessus s'ouvre en carte « Notre garantie » : sceau qui se dessine, « Vous rendre visible sur Google » se tape dans le champ, reflet. |
+| 17 | 10 Action | 0:52.97 | 0:58.07 | Audit gratuit sous quarante-huit heures. Devis sous vingt-quatre heures. | Audit gratuit sous 48 h. Devis sous 24 h. | La garantie se partage et se rétracte en deux grands boutons sur un panneau bleu nuit ; le curseur « Vous » clique « Audit gratuit sous 48 h » (« Demande envoyée »), puis « Devis sous 24 h ». |
+| 18 | 10 Action | 0:58.32 | 1:01.88 | Optikom, agence web à Vannes : optikom point f r. | optikom.fr | Les boutons se rangent ; « optikom.fr » se tape dans la barre d'adresse, Entrée, le logo Optikom fait sa mise au point ; Vannes · Golfe du Morbihan · 06 33 46 79 83. |
 
-Fin du film (carton final tenu) : 1:12.13
+Fin du film (carton final tenu) : 1:04.48

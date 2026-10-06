@@ -921,9 +921,10 @@ phrase('c3', CH[2].cx, 1655, 'Un seul interlocuteur, [[du devis au suivi.]]', { 
    ===================================================================== */
 const GAR = { cx: 4450, cy: 3050, w: 1240, h: 560 }; // même hauteur que les cartes de prix (partage net)
 const sceau = `<svg viewBox="0 0 210 210" width="230" height="230" fill="none"><circle cx="105" cy="105" r="100" stroke="#084eff" stroke-opacity=".18" stroke-width="2"/><circle class="sc-arc" cx="105" cy="105" r="86" stroke="#084eff" stroke-width="3" stroke-dasharray="540.4" stroke-dashoffset="540.4" transform="rotate(-90 105 105)" stroke-linecap="round"/><circle cx="105" cy="105" r="64" fill="url(#gS)"/><defs><linearGradient id="gS" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#1d5cff"/><stop offset="1" stop-color="#063cc8"/></linearGradient></defs><path d="M105 0v26M105 184v26M0 105h26M184 105h26" stroke="#084eff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/><g transform="translate(75 75) scale(2.5)" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${I.bouclier().replace(/<\/?svg[^>]*>/g, '')}</g></svg>`;
-const gar = box(mk(`<div class="carte garantie" style="background:#fff"><div class="sceau" style="width:230px;height:230px">${sceau}</div><div><h3>Notre garantie</h3><div class="vide">[À COMPLÉTER]<span class="caret"></span></div></div><div class="zone-reflet"><i></i></div></div>`), GAR.cx, GAR.cy, GAR.w, GAR.h);
+const gar = box(mk(`<div class="carte garantie" style="background:#fff"><div class="sceau" style="width:230px;height:230px">${sceau}</div><div><h3>Notre garantie</h3><div class="vide"><span class="g-t"></span><span class="caret"></span></div></div><div class="zone-reflet"><i></i></div></div>`), GAR.cx, GAR.cy, GAR.w, GAR.h);
 set0(gar, { autoAlpha: 0, zIndex: 13 });
-const garArc = q('.sc-arc', gar), garCaret = q('.vide .caret', gar);
+const garArc = q('.sc-arc', gar), garCaret = q('.vide .caret', gar), garT = q('.g-t', gar);
+const GARANTIE = 'Vous rendre visible sur Google.';
 P.arc = 0;
 const tM = F('g1') - .1;
 camTo(tL, .9, { x: 4450, y: 3050, s: 1.0 });
@@ -951,7 +952,8 @@ const garParts = qa('.sceau, h3, .vide', gar); set0(garParts, { autoAlpha: 0 });
 const tG1 = Math.max(T('g1'), tG0 + .2); // le texte arrive quand la carte est ouverte
 garParts.forEach((e, k) => show(e, tG1 + k * .12, { y: 18, b: 8, d: .7, ir: false }));
 tl.to(P, { arc: 1, duration: 1.1, ease: 'power2.inOut' }, tG1 + .1);
-cue('valide', tG1 + .15, .6);
+frappe('gar', GARANTIE, tG1 + .4, 30, .5); // la garantie se tape dans le champ
+cue('valide', tG1 + .4 + GARANTIE.length / 30 + .1, .6);
 const refletG = q('.zone-reflet i', gar);
 tl.fromTo(refletG, { x: -400 }, { x: 1700, duration: 1.1, ease: 'power2.inOut', immediateRender: false }, T('g1', 1.9));
 cue('brillance', T('g1', 1.9), .35);
@@ -965,39 +967,20 @@ const PY = 4180, PW = 620, PH = 560;
 const LIBS = ['Audit gratuit sous 48 h', 'Devis sous 24 h']; // ce que deviendront les cartes (acte 10)
 const prix = PX.map((p, i) => { const e = box(mk(`<div class="carte prix ${p.cls}" style="padding:40px 44px;${p.cls.includes('bleu') ? 'border:none;box-shadow:var(--shadow-accent-lg)' : ''}">${p.cls.includes('bleu') ? '<div class="trame-bleue"></div>' : ''}<div class="lib-pil" style="color:${i ? 'var(--accent-strong)' : '#fff'}"><span class="pt"></span>${LIBS[i]}<span class="fl">${I.fleche}</span></div><div class="zone-reflet"><i></i></div><span class="ico ${p.cls.includes('bleu') ? '' : 'ico-bleu'}">${p.ico}</span><h3 style="margin-top:24px">${p.h}</h3><div class="apd" style="margin-top:18px">à partir de</div><div class="montant">${typo(p.m)}<small>${p.s}</small></div><ul style="margin-top:22px">${p.li.map((l) => `<li><i>${I.coche(p.cls.includes('bleu') ? '#fff' : '#084eff', 3)}</i>${l}</li>`).join('')}</ul><div class="tva" style="bottom:26px">TVA non applicable, art. 293 B du CGI</div></div>`), p.cx, PY, PW, PH);
   set0(e, { autoAlpha: 0, zIndex: 13 }); return e; });
-const tN = F('x2') - .1;
-// la garantie descend avec la caméra (toujours au centre du cadre), puis se partage en deux cartes de prix
+const tN = tM + 1.1; // le partage est fini, les cartes deviennent les boutons
+// la garantie descend avec la caméra (toujours au centre du cadre), puis se partage en deux cartes qui deviennent les boutons
 camTo(tM, .75, { x: 4450, y: 4110, s: 1.04 });
-camTo(T('x1', .1), .7, { x: 4330, y: 4108, s: 1.06 }, 'power3.inOut');
-camTo(T('x1', .8), T('x2', -.1) - T('x1', .8), { x: 4318, y: 4110, s: 1.08 }, 'sine.inOut');
-camTo(T('x2', -.1), .8, { x: 4590, y: 4106, s: 1.07 }, 'power3.inOut');
-camTo(T('x2', .7), tN - .15 - T('x2', .7), { x: 4615, y: 4114, s: 1.11 }, 'sine.inOut'); // poussée lente une fois les points cochés
-cue('whoosh', tM, .8); cue('whoosh', T('x2', -.1), .45);
+cue('whoosh', tM, .8);
 tl.to(gar, { top: PY - GAR.h / 2, duration: .75, ease: 'power2.inOut' }, tM);
-tl.to(garParts, { autoAlpha: 0, filter: 'blur(6px)', duration: .18, ease: 'power2.in' }, tM + .55);
-const tS2 = tM + .76; // partage : la moitié droite est déjà la carte blanche, la gauche se remplit de bleu (opaque)
+tl.to(garParts, { autoAlpha: 0, filter: 'blur(6px)', duration: .12, ease: 'power2.in' }, tM + .6);
+const tS2 = tM + .7; // partage : la moitié droite est déjà la carte blanche, la gauche se remplit de bleu (opaque)
 tl.set(prix[1], { left: GAR.cx, top: PY - PH / 2, autoAlpha: 1 }, tS2);
 tl.set(prix[0], { left: GAR.cx - PW, top: PY - PH / 2, autoAlpha: 1, clipPath: 'inset(0% 100% 0% 0% round 24px)' }, tS2);
 tl.to(prix[0], { clipPath: 'inset(0% 0% 0% 0% round 24px)', duration: .26, ease: 'power2.inOut' }, tS2);
 tl.set(prix[0], { clipPath: 'none' }, tS2 + .27);
 tl.set(gar, { autoAlpha: 0 }, tS2 + .27);
-PX.forEach((p, i) => tl.to(prix[i], { left: p.cx - PW / 2, duration: .5, ease: 'power3.out' }, tS2 + .24));
 cue('pop', tS2, .5);
-PX.forEach((p, i) => {
-  const c = prix[i];
-  const parts = qa('.ico, h3, .apd, .montant, ul, .tva', c); parts.forEach((e) => set0(e, { autoAlpha: 0 }));
-  parts.forEach((e, k) => show(e, T('x1', i * .12) + k * .04, { y: 20, b: 8, d: .6 }));
-  // les points se cochent un à un quand on parle de cette carte
-  const ics = qa('li i', c); set0(ics, { scale: 0 });
-  ics.forEach((e, k) => { const t = T(i ? 'x2' : 'x1', .75 + k * .22); tl.to(e, { scale: 1, duration: .35, ease: 'back.out(3)' }, t); cue('tick', t, .45); });
-});
-const focusPrix = (i, t) => prix.forEach((c, k) => tl.to(c, { scale: k === i ? 1.05 : .95, autoAlpha: k === i ? 1 : .6, duration: .7, ease: 'power3.inOut' }, t));
-focusPrix(0, T('x1', .02)); focusPrix(1, T('x2', -.05));
-// reflet sur la carte dont on parle
-[[0, T('x1', 1.7)], [1, T('x2', 2.3)]].forEach(([i, t]) => { tl.fromTo(q('.zone-reflet i', prix[i]), { x: -300 }, { x: 900, duration: 1.0, ease: 'power2.inOut', immediateRender: false }, t); cue('brillance', t, .25); });
-phrase('x1', 4450, 3720, 'Votre site à partir de [[1 100 €.]]', { taille: 80 });
-phrase('x2', 4450, 3720, 'Référencement local [[dès 250 €/mois.]]', { taille: 80 });
-cue('pop', T('x1', .2), .5); cue('pop', T('x2', .2), .5);
+prix.forEach((c) => set0(qa('.ico, h3, .apd, .montant, ul, .tva', c), { autoAlpha: 0 }));
 
 /* =====================================================================
    ACTE 10 — APPEL À L'ACTION
@@ -1163,6 +1146,7 @@ function sync(t) {
   arcLH.setAttribute('stroke-dashoffset', 314.16 * (1 - P.lh));
   garArc.setAttribute('stroke-dashoffset', 540.4 * (1 - P.arc));
   garCaret.style.opacity = Math.floor(t * 2.4) % 2 ? .2 : 1;
+  const gt = GARANTIE.slice(0, Math.round(P.gar || 0)); if (garT.textContent !== gt) garT.textContent = gt;
   q('.pt', pil1).style.transform = `scale(${1 + .22 * Math.sin(t * 5)})`;
   urlT2.textContent = 'optikom.fr'.slice(0, Math.round(P.url2 || 0));
   urlCaret.style.opacity = Math.floor(t * 2.4) % 2 ? .25 : 1;
